@@ -1,43 +1,134 @@
 "use client";
-import { motion } from 'framer-motion';
-import Image from 'next/image';
+
+import Image from "next/image";
+import { motion } from "framer-motion";
 
 interface PropertyHeroProps {
-  imageUrl?: string;
   targetId: string;
+  imageUrl: string;
 }
 
-export default function PropertyHero({ imageUrl, targetId }: PropertyHeroProps) {
+export default function PropertyHero({
+  targetId,
+  imageUrl,
+}: PropertyHeroProps) {
   return (
-    <section className="relative hidden md:flex h-screen w-full items-center justify-center bg-slate-50 p-6">
-      {/* Envolvemos el contenedor en un motion.div */}
-      <motion.div 
-        initial={{ y: 80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ 
-          duration: 0.8, 
-          ease: [0.22, 1, 0.36, 1], // Un efecto "Cubic Bezier" para un deslizamiento más elegante
-          delay: 0.1 // Un retraso mínimo para que no choque con la derecha
-        }}
-        className="relative h-full w-full overflow-hidden rounded-3xl shadow-2xl border border-slate-200"
-      >
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={`Propiedad ${targetId}`}
-            fill
-            className="object-cover"
-            priority
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center bg-slate-200">
-            <span className="text-slate-400">Sin imagen</span>
-          </div>
-        )}
+    <motion.section
+      initial={{ y: 40, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.7 }}
+      className="bg-domus-card rounded-3xl overflow-hidden shadow-lg border border-domus-secondary h-fit"
+    >
+      {/* IMAGEN */}
+      <div className="relative w-full h-[420px] overflow-hidden">
+        <Image
+          src={imageUrl}
+          alt="Propiedad"
+          fill
+          className="object-cover"
+          priority
+        />
 
+        {/* Overlay elegante */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+      </div>
+
+      {/* INFO */}
+      <div className="p-6 md:p-8">
         
-      </motion.div>
-    </section>
+        {/* TITULO */}
+        <div className="mb-5">
+          <h2 className="text-3xl font-bold text-domus-text">
+            Torre Plaza
+          </h2>
+
+          <p className="text-domus-text-soft mt-2 flex items-center gap-2">
+            📍 Bahía Blanca, Buenos Aires
+          </p>
+        </div>
+
+        {/* STATS */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          
+          <div
+            className="bg-domus-bg rounded-2xl p-4 flex flex-col items-center text-center"
+          >
+            <Image
+              src="/habitaciones.jpg"
+              alt="Dormitorios"
+              width={32}
+              height={32}
+              className="mb-1"
+            />
+            <span className="font-bold text-domus-text">3</span>
+
+            <span className="text-sm text-domus-text-soft">
+              Dormitorios
+            </span>
+          </div>
+
+          <div
+            className="bg-domus-bg rounded-2xl p-4 flex flex-col items-center text-center"
+          >
+            <Image
+              src="/baños.jpg"
+              alt="Dormitorios"
+              width={32}
+              height={32}
+              className="mb-1"
+            />
+
+            <span className="font-bold text-domus-text">2</span>
+
+            <span className="text-sm text-domus-text-soft">
+              Baños
+            </span>
+          </div>
+
+          <div
+            className="bg-domus-bg rounded-2xl p-4 flex flex-col items-center text-center"
+          >
+            <Image
+              src="/superficie.jpg"
+              alt="Dormitorios"
+              width={24}
+              height={24}
+              className="mb-1"
+            />
+
+            <span className="font-bold text-domus-text">120m²</span>
+
+            <span className="text-sm text-domus-text-soft">
+              Superficie
+            </span>
+          </div>
+
+          <div
+            className="bg-domus-bg rounded-2xl p-4 flex flex-col items-center text-center"
+          >
+            <Image
+              src="/cochera.jpg"
+              alt="Dormitorios"
+              width={32}
+              height={32}
+              className="mb-1"
+            />
+
+            <span className="font-bold text-domus-text">1</span>
+
+            <span className="text-sm text-domus-text-soft">
+              Cochera
+            </span>
+          </div>
+        </div>
+
+        {/* BUTTON */}
+        <button
+          className="w-full bg-domus-secondary hover:bg-domus-primary hover:text-white text-domus-text py-4 rounded-2xl font-semibold transition-all duration-300"
+        >
+          Ver detalle del inmueble
+        </button>
+      </div>
+    </motion.section>
   );
 }
