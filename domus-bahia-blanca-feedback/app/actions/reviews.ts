@@ -34,23 +34,24 @@ export async function getTopRatedProperties() {
   try {
     const topRated = await db.review.groupBy({
       by: ['targetId'],
-      _avg: {
-        rating: true,
-      },
-      _count: {
-        _all: true,
-      },
-      orderBy: {
-        _avg: {
-          rating: 'desc',
-        },
-      },
-      take: 6, // Traemos las 6 mejores
+      _avg: { rating: true },
+      _count: { _all: true },
+      orderBy: { _avg: { rating: 'desc' } },
+      take: 6,
     });
 
-    return { success: true, data: topRated };
+    // Simulamos la unión con la base de datos de tu compañero
+    const dataWithMockInfo = topRated.map((item) => ({
+      id: item.targetId,
+      avgRating: item._avg.rating || 0,
+      reviewCount: item._count._all,
+      // Estos campos vendrán de la otra DB en el futuro:
+      address: `Propiedad en Zona ${item.targetId.split('-')[1] || item.targetId}`,
+      imageUrl: `/prueba-1.jpg`, // Usamos tu imagen de prueba por ahora
+    }));
+
+    return { success: true, data: dataWithMockInfo };
   } catch (error) {
-    console.error("Error al obtener el ranking:", error);
-    return { success: false, error: "No se pudo cargar el ranking." };
+    return { success: false, error: "Error al obtener ranking" };
   }
 }
