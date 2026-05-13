@@ -1,0 +1,33 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../node_modules/.prisma/client"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// --- MODELOS DE BASE DE DATOS ---
+
+model Review {
+  id        String   @id @default(uuid())
+  authorId  String                              // ID del usuario que escribe (ej. de Clerk)
+  targetId  String                              // ID de lo que se está calificando (ej. una propiedad)
+  visitId   String   @unique                    // ID de la visita para evitar reseñas duplicadas
+  rating    Int                                 // Puntuación (1 a 5)
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  
+  response  ReviewResponse? 
+}
+
+model ReviewResponse {
+  id        String   @id @default(uuid())
+  content   String   @db.Text
+  authorId  String                              // ID del administrador que responde
+  createdAt DateTime @default(now())
+  
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  reviewId  String   @unique 
+}

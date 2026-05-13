@@ -25,6 +25,7 @@ export default function PropertyHero({
           src={imageUrl}
           alt="Propiedad"
           fill
+          sizes="(max-width: 768px) 100vw, 50vw"
           className="object-cover"
           priority
         />
@@ -58,6 +59,7 @@ export default function PropertyHero({
               alt="Dormitorios"
               width={32}
               height={32}
+              style={{ width: "50%", height: "auto" }}
               className="mb-1"
             />
             <span className="font-bold text-domus-text">3</span>
@@ -75,6 +77,7 @@ export default function PropertyHero({
               alt="Dormitorios"
               width={32}
               height={32}
+              style={{ width: "50%", height: "auto" }}
               className="mb-1"
             />
 
@@ -93,6 +96,7 @@ export default function PropertyHero({
               alt="Dormitorios"
               width={24}
               height={24}
+              style={{ width: "40%", height: "auto" }}
               className="mb-1"
             />
 
@@ -111,6 +115,7 @@ export default function PropertyHero({
               alt="Dormitorios"
               width={32}
               height={32}
+              style={{ width: "50%", height: "auto" }}
               className="mb-1"
             />
 
