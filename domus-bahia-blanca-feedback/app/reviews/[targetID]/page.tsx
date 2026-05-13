@@ -34,14 +34,14 @@ export default function FeedbackPage({
     try {
         const result = await createReview({
           authorId: "user_anonimo_1",
-          targetId: targetId, // ← ya no es params.targetId
+          targetId: targetId, 
           visitId: crypto.randomUUID(),
           rating: rating,
           content: content,
         });
 
       if (result.success) {
-        alert("¡Reseña publicada con éxito en la base de datos!");
+        alert("¡Reseña publicada con éxito");
         setRating(0);
         setContent("");
       } else {
