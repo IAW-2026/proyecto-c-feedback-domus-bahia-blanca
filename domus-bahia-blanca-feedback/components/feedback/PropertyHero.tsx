@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import {BedDouble, Bath, Ruler, CarFront,} from "lucide-react";
 
 interface PropertyHeroProps {
   targetId: string;
@@ -54,15 +55,11 @@ export default function PropertyHero({
           <div
             className="bg-domus-bg rounded-2xl p-4 flex flex-col items-center text-center"
           >
-            <Image
-              src="/habitaciones.jpg"
-              alt="Dormitorios"
-              width={32}
-              height={32}
-              style={{ width: "50%", height: "auto" }}
-              className="mb-1"
-            />
-            <span className="font-bold text-domus-text">3</span>
+            <BedDouble className="w-8 h-8 text-domus-text mb-1" />
+
+            <span className="font-bold text-domus-text">
+              3
+            </span>
 
             <span className="text-sm text-domus-text-soft">
               Dormitorios
@@ -72,16 +69,11 @@ export default function PropertyHero({
           <div
             className="bg-domus-bg rounded-2xl p-4 flex flex-col items-center text-center"
           >
-            <Image
-              src="/baños.jpg"
-              alt="Dormitorios"
-              width={32}
-              height={32}
-              style={{ width: "50%", height: "auto" }}
-              className="mb-1"
-            />
+            <Bath className="w-8 h-8 text-domus-text mb-1" />
 
-            <span className="font-bold text-domus-text">2</span>
+            <span className="font-bold text-domus-text">
+              2
+            </span>
 
             <span className="text-sm text-domus-text-soft">
               Baños
@@ -91,16 +83,11 @@ export default function PropertyHero({
           <div
             className="bg-domus-bg rounded-2xl p-4 flex flex-col items-center text-center"
           >
-            <Image
-              src="/superficie.jpg"
-              alt="Dormitorios"
-              width={24}
-              height={24}
-              style={{ width: "40%", height: "auto" }}
-              className="mb-1"
-            />
+            <Ruler className="w-8 h-8 text-domus-text mb-1" />
 
-            <span className="font-bold text-domus-text">120m²</span>
+            <span className="font-bold text-domus-text">
+              120m²
+            </span>
 
             <span className="text-sm text-domus-text-soft">
               Superficie
@@ -110,16 +97,11 @@ export default function PropertyHero({
           <div
             className="bg-domus-bg rounded-2xl p-4 flex flex-col items-center text-center"
           >
-            <Image
-              src="/cochera.jpg"
-              alt="Dormitorios"
-              width={32}
-              height={32}
-              style={{ width: "50%", height: "auto" }}
-              className="mb-1"
-            />
+            <CarFront className="w-8 h-8 text-domus-text mb-1" />
 
-            <span className="font-bold text-domus-text">1</span>
+            <span className="font-bold text-domus-text">
+              1
+            </span>
 
             <span className="text-sm text-domus-text-soft">
               Cochera
