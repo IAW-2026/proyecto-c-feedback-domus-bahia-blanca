@@ -32,26 +32,37 @@ export async function createReview(data: {
 
 export async function getTopRatedProperties() {
   try {
-    const topRated = await db.review.groupBy({
-      by: ['targetId'],
-      _avg: { rating: true },
-      _count: { _all: true },
-      orderBy: { _avg: { rating: 'desc' } },
-      take: 6,
-    });
+    const reviews = await db.review.findMany();
 
-    // Simulamos la unión con la base de datos de tu compañero
-    const dataWithMockInfo = topRated.map((item) => ({
-      id: item.targetId,
-      avgRating: item._avg.rating || 0,
-      reviewCount: item._count._all,
-      // Estos campos vendrán de la otra DB en el futuro:
-      address: `Propiedad en Zona ${item.targetId.split('-')[1] || item.targetId}`,
-      imageUrl: `/prueba-1.jpg`, // Usamos tu imagen de prueba por ahora
+    const grouped = reviews.reduce((acc: any, review) => {
+      if (!acc[review.targetId]) {
+        acc[review.targetId] = {
+          total: 0,
+          count: 0,
+        };
+      }
+
+      acc[review.targetId].total += review.rating;
+      acc[review.targetId].count += 1;
+
+      return acc;
+    }, {});
+
+    const dataWithMockInfo = Object.entries(grouped).map(([targetId, data]: any) => ({
+      id: targetId,
+      avgRating: data.total / data.count,
+      reviewCount: data.count,
+      address: `Propiedad en Zona ${targetId.split("-")[1] || targetId}`,
+      imageUrl: "/prueba-1.jpg",
     }));
 
     return { success: true, data: dataWithMockInfo };
   } catch (error) {
-    return { success: false, error: "Error al obtener ranking" };
+    console.error(error);
+
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 }
