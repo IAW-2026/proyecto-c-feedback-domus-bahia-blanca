@@ -5,9 +5,12 @@ import {Star, ShieldCheck, Users, Heart, BedDouble, Bath, Ruler, CarFront, MapPi
 export default async function HomePage() {
   const result = await getTopRatedProperties();
 
+  console.log("RESULTADO:", result);
+
   const topProperties =
     result?.success && result.data ? result.data : [];
 
+    
   return (
     <main className="min-h-screen bg-domus-bg overflow-x-hidden">
       
