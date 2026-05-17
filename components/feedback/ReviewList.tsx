@@ -1,48 +1,25 @@
-export default function ReviewList() {
-  const reviews = [ //PROVISORIAS, ESTO LUEGO SE RESCATA DE LA BASE DE DATOS.
-    {
-      id: 1,
-      name: "María P.",
-      rating: 5,
-      date: "Hace 3 días",
-      verified: true,
-      comment:
-        "La propiedad estaba en excelente estado y la atención fue impecable. El agente respondió todas mis dudas y nos permitió recorrer cada ambiente con tranquilidad.",
-    },
-    {
-      id: 2,
-      name: "Lucas F.",
-      rating: 4,
-      date: "Hace 1 semana",
-      verified: true,
-      comment:
-        "Muy buena ubicación y buena predisposición durante la visita. Me hubiera gustado recibir más información sobre las expensas y servicios del edificio.",
-    },
-    {
-      id: 3,
-      name: "Agustina V.",
-      rating: 3,
-      date: "Hace 2 semanas",
-      verified: true,
-      comment:
-        "La visita estuvo bien organizada, aunque algunos detalles del inmueble no coincidían del todo con las fotos publicadas.",
-    },
-  ];
+// Definimos el tipo de datos que viene de Prisma
+interface ReviewProps {
+  id: string;
+  authorId: string;
+  rating: number;
+  content: string;
+  createdAt: Date;
+}
 
+export default function ReviewList({ reviews }: { reviews: ReviewProps[] }) {
   return (
     <div className="flex flex-col gap-4">
       {reviews.map((review) => (
-        < article
+        <article
           key={review.id}
           className="bg-white border border-domus-secondary rounded-2xl p-5 transition-all hover:shadow-md"
-          >
+        >
           <div className="flex flex-col md:flex-row md:items-start gap-5">
             
-            {/* AVATAR */}
-            <div
-              className="w-14 h-14 rounded-full bg-domus-primary text-white flex items-center justify-center text-lg font-bold shrink-0"
-            >
-              {review.name.charAt(0)}
+            {/* AVATAR (Usamos la inicial del ID de autor provisionalmente) */}
+            <div className="w-14 h-14 rounded-full bg-domus-primary text-white flex items-center justify-center text-lg font-bold shrink-0">
+              {review.authorId.charAt(0).toUpperCase()}
             </div>
 
             {/* CONTENIDO */}
@@ -54,20 +31,20 @@ export default function ReviewList() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="font-semibold text-domus-text text-lg">
-                      {review.name}
+                      Usuario {review.authorId.substring(0, 5)}
                     </h3>
-
-                    {review.verified && (
-                      <span
-                        className="text-xs bg-domus-primary-soft/30 text-domus-primary px-2 py-1 rounded-full font-medium"
-                      >
-                        Verificada
-                      </span>
-                    )}
+                    <span className="text-xs bg-domus-primary-soft/30 text-domus-primary px-2 py-1 rounded-full font-medium">
+                      Verificada
+                    </span>
                   </div>
 
+                  {/* FECHA FORMATEADA */}
                   <p className="text-sm text-domus-text-soft">
-                    {review.date}
+                    {new Date(review.createdAt).toLocaleDateString("es-AR", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
                   </p>
                 </div>
 
@@ -85,21 +62,26 @@ export default function ReviewList() {
                       ★
                     </span>
                   ))}
-
                   <span className="ml-2 text-sm font-semibold text-domus-text">
                     {review.rating}/5
                   </span>
                 </div>
               </div>
 
-              {/* COMMENT */}
+              {/* COMENTARIO REAL DE LA DB */}
               <p className="mt-4 text-domus-text leading-relaxed">
-                {review.comment}
+                {review.content}
               </p>
             </div>
           </div>
         </article>
       ))}
+
+      {reviews.length === 0 && (
+        <p className="text-center text-domus-text-soft py-6">
+          No hay reseñas para esta propiedad aún. ¡Sé el primero!
+        </p>
+      )}
     </div>
   );
 }

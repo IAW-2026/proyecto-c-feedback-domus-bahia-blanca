@@ -1,11 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Toaster, toast } from "sonner";
 import PropertyHero from "@/components/feedback/PropertyHero";
 import ReviewList from "@/components/feedback/ReviewList";
-import { useState } from "react";
-import { createReview } from "@/app/actions/reviews"; 
-import { use } from "react";
+import { useState, useEffect, use } from "react";
+import { createReview, getReviewsByTarget } from "@/app/actions/reviews"; 
 
 export default function FeedbackPage({
   params,
@@ -13,42 +13,64 @@ export default function FeedbackPage({
   params: Promise<{ targetId: string }>;
 }) {
   const { targetId } = use(params);
+  
   // --- ESTADOS ---
   const [rating, setRating] = useState(0);
   const [content, setContent] = useState("");
   const [isPending, setIsPending] = useState(false);
+  const [reviews, setReviews] = useState<any[]>([]); 
+
+  // --- EFECTO: Cargar reseñas de la DB al montar el componente ---
+  useEffect(() => {
+    async function loadReviews() {
+      const result = await getReviewsByTarget(targetId);
+      if (result.success && result.data) {
+        setReviews(result.data); // Ya vienen ordenadas desc desde el backend
+      } else {
+        toast.error("No se pudieron cargar las reseñas históricas.");
+      }
+    }
+    if (targetId) loadReviews();
+  }, [targetId]);
 
   // --- LÓGICA DE ENVÍO ---
   const handlePublish = async () => {
     if (rating === 0) {
-      alert("Por favor, selecciona una puntuación con las estrellas.");
+      toast.error("Por favor, selecciona una puntuación con las estrellas.");
       return;
     }
     if (!content.trim()) {
-      alert("El comentario no puede estar vacío.");
+      toast.error("El comentario no puede estar vacío.");
       return;
     }
 
     setIsPending(true);
 
     try {
-        const result = await createReview({
-          authorId: "user_anonimo_1",
-          targetId: targetId, 
-          visitId: crypto.randomUUID(),
-          rating: rating,
-          content: content,
-        });
+      const result = await createReview({
+        authorId: "user_anonimo_1",
+        targetId: targetId, 
+        visitId: crypto.randomUUID(),
+        rating: rating,
+        content: content,
+      });
 
       if (result.success) {
-        alert("¡Reseña publicada con éxito");
+        toast.success("¡Reseña publicada con éxito!");
+        
+        // TRUCO DE INTERFAZ: Metemos la nueva reseña PRIMERA en la lista local
+        if (result.review) {
+          setReviews((prev) => [result.review, ...prev]);
+        }
+
+        // Limpiar formulario
         setRating(0);
         setContent("");
       } else {
-        alert("Error al guardar: " + result.error);
+        toast.error("Error al guardar: " + result.error);
       }
     } catch (error) {
-      alert("Error crítico de conexión.");
+      toast.error("Error crítico de conexión.");
       console.error(error);
     } finally {
       setIsPending(false);
@@ -57,6 +79,7 @@ export default function FeedbackPage({
 
   return (
     <main className="min-h-screen bg-domus-bg px-4 md:px-8 py-8">
+      <Toaster position="top-right" richColors />
       <div className="max-w-7xl mx-auto flex flex-col gap-8">
         
         {/* HERO + FORM */}
@@ -150,7 +173,13 @@ export default function FeedbackPage({
               <p className="text-domus-text-soft mt-1">Opiniones verificadas.</p>
             </div>
           </div>
-          <ReviewList />
+          
+          {/* CONTENEDOR CON SCROLL INDEPENDIENTE */}
+          <div className="max-h-[600px] overflow-y-auto pr-2">
+            {/* PASAMOS EL ESTADO REAL AL COMPONENTE */}
+            <ReviewList reviews={reviews} />
+          </div>
+          
         </motion.section>
 
         <footer className="text-center text-domus-text-soft text-sm pb-4">

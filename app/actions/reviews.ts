@@ -21,7 +21,7 @@ export async function createReview(data: {
       },
     });
 
-    revalidatePath("/"); // Esto limpia la caché para mostrar la nueva reseña
+    revalidatePath("/"); 
     return { success: true, review };
   } catch (error) {
     console.error("Error al crear reseña:", error);
@@ -64,5 +64,20 @@ export async function getTopRatedProperties() {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",
     };
+  }
+}
+
+export async function getReviewsByTarget(targetId: string) {
+  try {
+    const reviews = await db.review.findMany({
+      where: { targetId },
+      orderBy: {
+        createdAt: "desc", 
+      },
+    });
+    return { success: true, data: reviews };
+  } catch (error) {
+    console.error(error);
+    return { success: false, data: [] };
   }
 }
