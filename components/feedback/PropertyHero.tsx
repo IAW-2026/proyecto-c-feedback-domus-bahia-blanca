@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import {BedDouble, Bath, Ruler, CarFront,} from "lucide-react";
+import {BedDouble, Bath, Ruler, CarFront, Building2,} from "lucide-react";
 
 interface PropertyHeroProps {
   targetId: string;
@@ -109,13 +109,14 @@ export default function PropertyHero({
           </div>
         </div>
 
-        {/* BUTTON */}
-        <button
-          className="w-full bg-domus-secondary hover:bg-domus-primary hover:text-white text-domus-text py-4 rounded-2xl font-semibold transition-all duration-300"
-        >
+       {/* BUTTON CORREGIDO */}
+      <button
+        className="w-full bg-domus-secondary hover:bg-domus-primary hover:text-white text-domus-text py-4 rounded-2xl font-semibold transition-all duration-300 flex items-center justify-center gap-x-2"
+      >
+        <Building2 size={25} className="shrink-0" />
           Ver detalle del inmueble
-        </button>
-      </div>
+      </button>
+    </div>
     </motion.section>
   );
 }

@@ -6,6 +6,7 @@ import PropertyHero from "@/components/feedback/PropertyHero";
 import ReviewList from "@/components/feedback/ReviewList";
 import { useState, useEffect, use } from "react";
 import { createReview, getReviewsByTarget } from "@/app/actions/reviews"; 
+import { Send } from "lucide-react"; 
 
 export default function FeedbackPage({
   params,
@@ -105,25 +106,34 @@ export default function FeedbackPage({
               </p>
             </div>
 
-            {/* ESTRELLAS INTERACTIVAS */}
-            <div className="mb-10">
-              <div className="flex items-center gap-6 justify-center">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() => setRating(star)}
-                    className={`text-5xl transition-all duration-200 hover:scale-110 ${
-                      star <= rating ? "text-domus-terracota" : "text-domus-secondary"
-                    }`}
-                  >
-                    ★
-                  </button>
-                ))}
-              </div>
-              <div className="flex justify-between mt-3 px-1 text-sm text-domus-text-soft">
-                <span>Muy mala</span>
-                <span>Excelente</span>
+            {/* ESTRELLAS INTERACTIVAS - Opción 2: Pequeño recuadro integrado */}
+            <div className="mb-10 flex flex-col">
+              
+              {/* Nuevo label superior */}
+              <label className="font-semibold text-domus-text text-lg mb-4">
+                Puntuá tu experiencia
+              </label>
+
+              {/* Contenedor tipo 'recuadro' (Card) centrado y más ancho, menos alto */}
+              <div className="bg-white border border-domus-secondary rounded-2xl p-4 shadow-sm w-full max-w-2xl mx-auto">
+                <div className="flex items-center gap-4 justify-center mb-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setRating(star)}
+                      className={`text-7xl transition-all duration-200 hover:scale-110 active:scale-95 ${
+                        star <= rating ? "text-domus-terracota" : "text-domus-secondary"
+                      }`}
+                    >
+                      ★
+                    </button>
+                  ))}
+                </div>
+                <div className="flex justify-between px-1 text-xs font-medium text-domus-text-soft">
+                  <span>Muy mala</span>
+                  <span>Excelente</span>
+                </div>
               </div>
             </div>
 
@@ -149,12 +159,13 @@ export default function FeedbackPage({
             <button
               onClick={handlePublish}
               disabled={isPending}
-              className={`mt-8 py-4 rounded-2xl text-lg font-bold transition-all duration-200 shadow-md active:scale-95 ${
+              className={`mt-8 py-4 rounded-2xl text-lg font-bold transition-all duration-200 shadow-md active:scale-95 flex items-center justify-center gap-2 ${
                 isPending 
                   ? "bg-gray-400 cursor-not-allowed" 
                   : "bg-domus-primary hover:bg-domus-primary-mid text-white hover:shadow-xl"
               }`}
             >
+              {!isPending && <Send size={20} />}
               {isPending ? "Publicando..." : "Publicar reseña"}
             </button>
           </motion.section>
