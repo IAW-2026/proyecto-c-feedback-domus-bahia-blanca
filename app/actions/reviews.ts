@@ -81,38 +81,3 @@ export async function getReviewsByTarget(targetId: string) {
     return { success: false, data: [] };
   }
 }
-
-export async function getSellerDashboardMetrics(targetIds: string[]) {
-  try {
-    // 1. Usamos directamente el array de IDs de propiedades que te pase el equipo 
-    // o que tengas en tu contexto, sin consultar a una tabla 'Property' inexistente.
-    
-    // 2. Conteo agrupado directamente sobre Review
-    const stats = await db.review.groupBy({
-      by: ['rating'],
-      where: { targetId: { in: targetIds } },
-      _count: { rating: true },
-    });
-
-    // 3. Reseña destacada
-    const featuredReview = await db.review.findFirst({
-      where: { targetId: { in: targetIds } },
-      orderBy: { createdAt: 'desc' },
-      select: { content: true, authorId: true, rating: true }
-    });
-
-    // 4. Normalización
-    const ratingDistribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-    stats.forEach((s) => {
-      ratingDistribution[s.rating as keyof typeof ratingDistribution] = s._count.rating;
-    });
-
-    return { 
-      success: true, 
-      data: { ratingDistribution, featuredReview } 
-    };
-  } catch (error) {
-    console.error("Error en dashboard:", error);
-    return { success: false, error: "Error al obtener métricas" };
-  }
-}
