@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Toaster, toast } from "sonner";
 import PropertyHero from "@/components/feedback/PropertyHero";
 import ReviewList from "@/components/feedback/ReviewList";
+import StarRating from "@/components/feedback/StarRating";
 import { useState, useEffect, use } from "react";
 import { createReview, getReviewsByTarget } from "@/app/actions/reviews"; 
 import { Send } from "lucide-react"; 
@@ -59,7 +60,7 @@ export default function FeedbackPage({
       if (result.success) {
         toast.success("¡Reseña publicada con éxito!");
         
-        // TRUCO DE INTERFAZ: Metemos la nueva reseña PRIMERA en la lista local
+        // En lugar de recargar la página, el usuario ve instantaneamente su review primero.
         if (result.review) {
           setReviews((prev) => [result.review, ...prev]);
         }
@@ -110,37 +111,20 @@ export default function FeedbackPage({
             <div className="mb-10 flex flex-col">
               
               {/* Nuevo label superior */}
-              <label className="font-semibold text-domus-text text-lg mb-4">
-                Puntuá tu experiencia
+              <label className="block text-center font-semibold text-domus-text text-lg mb-4">
+                ¡Puntuá tu experiencia!
               </label>
 
-              {/* Contenedor tipo 'recuadro' (Card) centrado y más ancho, menos alto */}
+              {/* Contenedor 'recuadro' de las estrellas */}
               <div className="bg-white border border-domus-secondary rounded-2xl p-4 shadow-sm w-full max-w-2xl mx-auto">
-                <div className="flex items-center gap-4 justify-center mb-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      type="button"
-                      onClick={() => setRating(star)}
-                      className={`text-7xl transition-all duration-200 hover:scale-110 active:scale-95 ${
-                        star <= rating ? "text-domus-terracota" : "text-domus-secondary"
-                      }`}
-                    >
-                      ★
-                    </button>
-                  ))}
-                </div>
-                <div className="flex justify-between px-1 text-xs font-medium text-domus-text-soft">
-                  <span>Muy mala</span>
-                  <span>Excelente</span>
-                </div>
+                <StarRating rating={rating} setRating={setRating} />
               </div>
             </div>
 
             {/* ÁREA DE TEXTO */}
             <div className="flex flex-col gap-4">
               <label className="font-semibold text-domus-text text-lg">
-                Dejá tu reseña
+                Dejá tu reseña:
               </label>
               <textarea
                 value={content}

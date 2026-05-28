@@ -1,11 +1,12 @@
 import { getTopRatedProperties } from "@/app/actions/reviews";
 import Link from "next/link";
 import {Star, ShieldCheck, Users, Heart, BedDouble, Bath, Ruler, CarFront, MapPin,} from "lucide-react";
+import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
 export default async function HomePage() {
   const result = await getTopRatedProperties();
-
-  console.log("RESULTADO:", result);
+  const { userId } = await auth(); 
 
   const topProperties =
     result?.success && result.data ? result.data : [];
@@ -19,6 +20,7 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
           
           {/* LOGO */}
+
           <div>
             <h1 className="text-4xl font-bold text-domus-primary tracking-wide">
               DOMUS
@@ -27,6 +29,32 @@ export default async function HomePage() {
             <p className="text-xs tracking-[0.3em] text-domus-text-soft">
               BAHÍA BLANCA
             </p>
+          </div>
+
+          {/*ACTIONS*/}
+
+          <div className="flex items-center gap-4">
+            {!userId ? (
+              <>
+                <SignInButton mode="modal">
+                  <button className="border border-domus-secondary px-5 py-3 rounded-2xl hover:bg-domus-secondary transition cursor-pointer">
+                    Ingresar
+                  </button>
+                </SignInButton>
+                <SignUpButton mode="modal">
+                  <button className="bg-domus-primary text-white px-5 py-3 rounded-2xl hover:bg-domus-primary-mid transition shadow-md cursor-pointer">
+                    Dejar una reseña
+                  </button>
+                </SignUpButton>
+              </>
+            ) : (
+              <>
+                <button className="bg-domus-primary text-white px-5 py-3 rounded-2xl hover:bg-domus-primary-mid transition shadow-md cursor-pointer">
+                  Dejar una reseña
+                </button>
+                <UserButton appearance={{ elements: { avatarBox: "w-11 h-11 border border-domus-secondary shadow-sm" } }} />
+              </>
+            )}
           </div>
 
           {/* NAV */}
@@ -48,16 +76,6 @@ export default async function HomePage() {
             </button>
           </div>*/}
 
-          {/* ACTIONS */}
-          <div className="flex items-center gap-4">
-            <button className="border border-domus-secondary px-5 py-3 rounded-2xl hover:bg-domus-secondary transition">
-              Ingresar
-            </button>
-
-            <button className="bg-domus-primary text-white px-5 py-3 rounded-2xl hover:bg-domus-primary-mid transition shadow-md">
-              Dejar una reseña
-            </button>
-          </div>
         </div>
       </nav>
 
