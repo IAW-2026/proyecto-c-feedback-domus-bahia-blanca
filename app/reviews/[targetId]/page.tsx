@@ -8,6 +8,7 @@ import StarRating from "@/components/feedback/StarRating";
 import { useState, useEffect, use } from "react";
 import { createReview, getReviewsByTarget } from "@/app/actions/reviews"; 
 import { Send } from "lucide-react"; 
+import { useUser } from "@clerk/nextjs";
 
 export default function FeedbackPage({
   params,
@@ -15,7 +16,8 @@ export default function FeedbackPage({
   params: Promise<{ targetId: string }>;
 }) {
   const { targetId } = use(params);
-  
+  const { user } = useUser();
+
   // --- ESTADOS ---
   const [rating, setRating] = useState(0);
   const [content, setContent] = useState("");
@@ -46,11 +48,18 @@ export default function FeedbackPage({
       return;
     }
 
+    if (!user) {
+      toast.error("Debes iniciar sesión para publicar.");
+      return;
+    }
+
     setIsPending(true);
 
     try {
       const result = await createReview({
-        authorId: "user_anonimo_1",
+        authorId: user.id, 
+        authorName: user.fullName || `${user.firstName} ${user.lastName}`,
+        authorImageUrl: user.imageUrl,
         targetId: targetId, 
         visitId: crypto.randomUUID(),
         rating: rating,

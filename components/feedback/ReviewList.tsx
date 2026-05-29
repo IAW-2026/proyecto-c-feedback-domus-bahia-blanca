@@ -1,7 +1,8 @@
-// Definimos el tipo de datos que viene de Prisma
 interface ReviewProps {
   id: string;
   authorId: string;
+  authorName?: string | null;      
+  authorImageUrl?: string | null;   
   rating: number;
   content: string;
   createdAt: Date;
@@ -17,10 +18,18 @@ export default function ReviewList({ reviews }: { reviews: ReviewProps[] }) {
         >
           <div className="flex flex-col md:flex-row md:items-start gap-5">
             
-            {/* AVATAR (Usamos la inicial del ID de autor provisionalmente) */}
-            <div className="w-14 h-14 rounded-full bg-domus-primary text-white flex items-center justify-center text-lg font-bold shrink-0">
-              {review.authorId.charAt(0).toUpperCase()}
-            </div>
+            {/* AVATAR REAL O PLACEHOLDER EN CASO DE ERROR */}
+            {review.authorImageUrl ? (
+              <img 
+                src={review.authorImageUrl} 
+                alt={review.authorName || "Avatar"} 
+                className="w-14 h-14 rounded-full object-cover shrink-0 border border-domus-secondary"
+              />
+            ) : (
+              <div className="w-14 h-14 rounded-full bg-domus-primary text-white flex items-center justify-center text-lg font-bold shrink-0">
+                {(review.authorName || review.authorId).charAt(0).toUpperCase()}
+              </div>
+            )}
 
             {/* CONTENIDO */}
             <div className="flex-1">
@@ -30,8 +39,9 @@ export default function ReviewList({ reviews }: { reviews: ReviewProps[] }) {
                 
                 <div>
                   <div className="flex items-center gap-2">
+                    {/* NOMBRE REAL DEL USUARIO CLERK */}
                     <h3 className="font-semibold text-domus-text text-lg">
-                      Usuario {review.authorId.substring(0, 5)}
+                      {review.authorName || `Usuario ${review.authorId.substring(0, 5)}`}
                     </h3>
                     <span className="text-xs bg-domus-primary-soft/30 text-domus-primary px-2 py-1 rounded-full font-medium">
                       Verificada

@@ -5,6 +5,8 @@ import { revalidatePath } from "next/cache";
 
 export async function createReview(data: {
   authorId: string;
+  authorName: string;
+  authorImageUrl: string;
   targetId: string;
   visitId: string;
   rating: number;
@@ -14,6 +16,8 @@ export async function createReview(data: {
     const review = await db.review.create({
       data: {
         authorId: data.authorId,
+        authorName: data.authorName,
+        authorImageUrl: data.authorImageUrl,
         targetId: data.targetId,
         visitId: data.visitId,
         rating: data.rating,
@@ -82,37 +86,40 @@ export async function getReviewsByTarget(targetId: string) {
   }
 }
 
-export async function getSellerDashboardMetrics(targetIds: string[]) {
+export async function getAllRatedProperties() {
   try {
-    // 1. Usamos directamente el array de IDs de propiedades que te pase el equipo 
-    // o que tengas en tu contexto, sin consultar a una tabla 'Property' inexistente.
-    
-    // 2. Conteo agrupado directamente sobre Review
-    const stats = await db.review.groupBy({
-      by: ['rating'],
-      where: { targetId: { in: targetIds } },
-      _count: { rating: true },
+
+    const topRated = await db.review.groupBy({
+      by: ["targetId"],
+      _avg: { rating: true },
+      _count: { _all: true },
+      orderBy: {
+        _avg: {
+          rating: "desc",
+        },
+      },
     });
 
-    // 3. Reseña destacada
-    const featuredReview = await db.review.findFirst({
-      where: { targetId: { in: targetIds } },
-      orderBy: { createdAt: 'desc' },
-      select: { content: true, authorId: true, rating: true }
-    });
+    const dataWithMockInfo = topRated.map((item) => ({
+      id: item.targetId,
+      avgRating: item._avg.rating || 0,
+      reviewCount: item._count._all,
+      address: `Propiedad en Zona ${item.targetId.split("-")[1] || item.targetId}`,
+      imageUrl: "/prueba-1.jpg",
+    }));
 
-    // 4. Normalización
-    const ratingDistribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-    stats.forEach((s) => {
-      ratingDistribution[s.rating as keyof typeof ratingDistribution] = s._count.rating;
-    });
-
-    return { 
-      success: true, 
-      data: { ratingDistribution, featuredReview } 
+    return {
+      success: true,
+      data: dataWithMockInfo,
     };
+
   } catch (error) {
-    console.error("Error en dashboard:", error);
-    return { success: false, error: "Error al obtener métricas" };
+
+    console.error(error);
+
+    return {
+      success: false,
+      error: "Error al obtener ranking",
+    };
   }
 }
