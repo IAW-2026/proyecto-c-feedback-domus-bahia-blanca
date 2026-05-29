@@ -11,13 +11,15 @@ datasource db {
 // --- MODELOS DE BASE DE DATOS ---
 
 model Review {
-  id        String   @id @default(uuid())
-  authorId  String                              // ID del usuario que escribe (ej. de Clerk)
-  targetId  String                              // ID de lo que se está calificando (ej. una propiedad)
-  visitId   String   @unique                    // ID de la visita para evitar reseñas duplicadas
-  rating    Int                                 // Puntuación (1 a 5)
-  content   String   @db.Text
-  createdAt DateTime @default(now())
+  id             String   @id @default(uuid())
+  authorId       String
+  authorName     String?
+  authorImageUrl String?
+  targetId       String
+  visitId        String   @unique
+  rating         Int
+  content        String   @db.Text
+  createdAt      DateTime @default(now())
   
   response  ReviewResponse? 
 }
@@ -25,7 +27,7 @@ model Review {
 model ReviewResponse {
   id        String   @id @default(uuid())
   content   String   @db.Text
-  authorId  String                              // ID del administrador que responde
+  authorId  String
   createdAt DateTime @default(now())
   
   review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
