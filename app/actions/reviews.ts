@@ -196,3 +196,10 @@ export async function getPropertiesAvailableToReview(userId: string) {
     return [];
   }
 }
+
+export async function getUserRole(userId: string) {   
+
+  // MOCK TEMPORAL
+  // después vendrá desde las otras apps
+  return "seller";
+}

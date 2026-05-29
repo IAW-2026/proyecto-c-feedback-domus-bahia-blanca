@@ -1,28 +1,54 @@
 import { auth } from "@clerk/nextjs/server";
 import { notFound, redirect } from "next/navigation";
-//import { checkIfUserCanReview } from "@/app/actions/reviews"; // Tu Server Action de validación
+
 import BuyerFeedbackClient from "@/components/clients/BuyerFeedbackClient";
+import SellerFeedbackClient from "@/components/clients/SellerFeedbackClient";
+import { getUserRole } from "@/app/actions/reviews";
+// import { checkIfUserCanReview } from "@/app/actions/reviews"; con la union de aplicaciones esto funcionará
 
 interface FeedbackPageProps {
   params: Promise<{ targetId: string }>;
 }
 
-export default async function FeedbackPage({ params }: FeedbackPageProps) {
-  // 1. Validar autenticación con Clerk en el servidor
+export default async function FeedbackPage({
+  params,
+}: FeedbackPageProps) {
+
   const { userId } = await auth();
+
   if (!userId) {
     redirect("/");
   }
 
   const { targetId } = await params;
 
-  // 2. Validar autorización en la Base de Datos antes de renderizar: ESTO RECIEN FUNCIONARÁ CUANDO CONECTE CON LAS OTRAS APPS DEL PROYE
-  {/*const canReview = await checkIfUserCanReview(userId, targetId);
+  // PERMISOS: con la union de aplicaciones esto funcionará
+  /*
+  const canReview = await checkIfUserCanReview(
+    userId,
+    targetId
+  );
+
   if (!canReview) {
-    notFound(); // Dispara directamente tu componente 404 personalizado
-  }*/}
+    notFound();
+  }
+  */
 
-  // 3. Si tiene permiso, cargamos el cliente pasándole el targetId como prop
-  return <BuyerFeedbackClient targetId={targetId} />;
+  // ROL
+  const role = await getUserRole(userId);
+
+  // RENDER
+  if (role === "seller") {
+    return (
+      <SellerFeedbackClient
+        targetId={targetId}
+      />
+    );
+  }
+
+  return (
+    <BuyerFeedbackClient
+      targetId={targetId}
+    />
+  );
 }
-
