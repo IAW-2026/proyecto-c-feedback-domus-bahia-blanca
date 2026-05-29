@@ -197,9 +197,26 @@ export async function getPropertiesAvailableToReview(userId: string) {
   }
 }
 
+export async function getTotalReviewsCount() { //sirve para la homepage en el cartel de "mas de X cantidad de reseñas"
+  try {
+    const total = await db.review.count();
+
+    return {
+      success: true,
+      total,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      total: 0,
+    };
+  }
+}
+
 export async function getUserRole(userId: string) {   
 
   // MOCK TEMPORAL
   // después vendrá desde las otras apps
-  return "seller";
+  return "buyer";
 }
+
