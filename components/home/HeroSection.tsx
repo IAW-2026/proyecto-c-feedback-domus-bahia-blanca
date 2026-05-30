@@ -39,8 +39,12 @@ export default function HeroSection({
         >
 
         {/* LEFT */}
+        <motion.div
+            initial={{ opacity: 0, x: -60, filter: "blur(6px)" }}
+            animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
         <div>
-
           {/* BADGE */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-domus-card border border-domus-secondary shadow-sm mb-7">
             <ShieldCheck
@@ -129,16 +133,23 @@ export default function HeroSection({
 
           </div>
         </div>
+        </motion.div>
 
         {/* RIGHT */}
+        <motion.div
+            initial={{ opacity: 0, filter: "blur(6px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="hidden xl:flex justify-center items-center"
+        >
         <div className="hidden xl:flex justify-center items-center">
-          <div className="w-full h-[460px] rounded-[30px] relative overflow-hidden">
+          <div className="w-full h-[490px] rounded-[30px] relative overflow-hidden">
 
             {/* glow */}
             <div className="absolute inset-0 bg-domus-terracota/10 blur-3xl scale-110" />
 
             <img
-              src="/bahia_caricatura.png"
+              src="/bahia_caricatura_2.0.png"
               alt="Domus"
               className="relative w-full h-full object-cover opacity-95"
             />
@@ -146,6 +157,7 @@ export default function HeroSection({
             <div className="absolute inset-0 rounded-[30px] bg-gradient-to-r from-domus-bg/40 via-transparent to-domus-bg/40 pointer-events-none" />
           </div>
         </div>
+        </motion.div>
 
       </motion.div>
     </section>

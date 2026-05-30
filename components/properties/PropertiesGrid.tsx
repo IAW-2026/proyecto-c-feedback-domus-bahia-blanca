@@ -54,7 +54,7 @@ export default function PropertiesGrid({
         hidden: {},
         show: {
           transition: {
-            staggerChildren: 0.12,
+            staggerChildren: 0.18,
           },
         },
       }}
@@ -67,7 +67,7 @@ export default function PropertiesGrid({
               opacity: 0,
               y: 70,
               scale: 0.94,
-              filter: "blur(8px)",
+              filter: "blur(12px)",
             },
             show: {
               opacity: 1,
@@ -75,7 +75,7 @@ export default function PropertiesGrid({
               scale: 1,
               filter: "blur(0px)",
               transition: {
-                duration: 0.7,
+                duration: 1.2,
                 ease: [0.22, 1, 0.36, 1],
               },
             },

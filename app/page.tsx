@@ -5,6 +5,7 @@ import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import PropertiesGrid from "@/components/properties/PropertiesGrid";
 import HeroSection from "@/components/home/HeroSection";
+import SectionTitle from "@/components/home/SectionTitle";
 
 export default async function HomePage() {
   const [result, reviewsCountResult] = await Promise.all([
@@ -90,38 +91,7 @@ export default async function HomePage() {
 
       {/* SECTION TITLE */}
       <section className="max-w-7xl mx-auto px-6 pb-6">
-        <div className="flex items-center justify-between">
-
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-full border-2 border-domus-terracota flex items-center justify-center">
-              <Star
-                className="text-domus-terracota fill-domus-terracota"
-                size={22}
-              />
-            </div>
-
-            <div>
-              <h2 className="text-4xl font-bold text-domus-primary">
-                Mejor calificadas
-              </h2>
-
-              <p className="text-domus-text-soft mt-1">
-                Basado en experiencias reales de compradores.
-              </p>
-            </div>
-          </div>
-
-          <Link
-            href="/globalReviews"
-            className="group hidden md:flex items-center text-domus-terracota font-semibold gap-1 transition-colors duration-300"
-          >
-            Ver todas
-
-            <span className="inline-block transform group-hover:translate-x-1.5 transition-transform duration-300 ease-out">
-              →
-            </span>
-          </Link>
-        </div>
+        <SectionTitle />
       </section>
 
       {/* GRID */}
