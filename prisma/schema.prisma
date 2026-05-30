@@ -8,28 +8,24 @@ datasource db {
   provider = "postgresql"
 }
 
-// --- MODELOS DE BASE DE DATOS ---
-
 model Review {
-  id             String   @id @default(uuid())
+  id             String          @id @default(uuid())
   authorId       String
-  authorName     String?
-  authorImageUrl String?
   targetId       String
-  visitId        String   @unique
+  visitId        String          @unique
   rating         Int
-  content        String   @db.Text
-  createdAt      DateTime @default(now())
-  
-  response  ReviewResponse? 
+  content        String
+  createdAt      DateTime        @default(now())
+  authorImageUrl String?
+  authorName     String?
+  response       ReviewResponse?
 }
 
 model ReviewResponse {
   id        String   @id @default(uuid())
-  content   String   @db.Text
+  content   String
   authorId  String
   createdAt DateTime @default(now())
-  
+  reviewId  String   @unique
   review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-  reviewId  String   @unique 
 }
