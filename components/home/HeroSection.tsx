@@ -86,17 +86,19 @@ export default function HeroSection({
             </p>
 
             {/* CTA */}
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link href="/reviews/availableReviews">
-                <button className="bg-domus-primary text-white px-3 sm:px-5 py-2 sm:py-3 rounded-xl sm:rounded-2xl text-sm sm:text-base font-medium hover:bg-domus-primary-mid transition shadow-md cursor-pointer whitespace-nowrap">
-                  Dejar una reseña
-                </button>
+            <div className="mt-6 flex flex-wrap gap-5">
+              <Link
+                href="/reviews/availableReviews"
+                className="bg-domus-primary text-white px-5 py-3 rounded-2xl font-medium hover:bg-domus-primary-mid transition shadow-md cursor-pointer whitespace-nowrap"
+              >
+                Dejar una reseña
               </Link>
 
-              <Link href="/globalReviews">
-                <button className="border border-domus-primary bg-domus-card px-6 py-3 rounded-2xl font-semibold text-domus-text hover:bg-domus-secondary/40 transition">
-                  Explorar reseñas
-                </button>
+              <Link
+                href="/globalReviews"
+                className="border border-domus-primary bg-domus-card px-6 py-3 rounded-2xl font-semibold text-domus-text hover:bg-domus-secondary/40 transition"
+              >
+                Explorar reseñas
               </Link>
 
               <button

@@ -2,15 +2,7 @@
 import { useIsMobile } from "@/hooks/useIsMobile";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  Star,
-  Heart,
-  MapPin,
-  BedDouble,
-  Bath,
-  Ruler,
-  CarFront,
-} from "lucide-react";
+import {Star, Heart, MapPin, BedDouble, Bath, Ruler, CarFront} from "lucide-react";
 
 export interface PropertyItem {
   id: string;
@@ -98,7 +90,7 @@ export default function PropertiesGrid({
             <div className="relative h-56 overflow-hidden">
               <img
                 src={item.imageUrl}
-                alt="Propiedad"
+                alt={`Foto de ${item.address}`}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
               />
 
@@ -109,7 +101,10 @@ export default function PropertiesGrid({
               </div>
 
               {/* FAVORITE */}
-              <button className="absolute top-4 right-4 w-12 h-12 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center shadow-md">
+              <button
+                  aria-label="Añadir a favoritos"
+                  className="absolute top-4 right-4 w-12 h-12 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center shadow-md"
+                >
                 <Heart size={20} className="text-domus-text" />
               </button>
             </div>
