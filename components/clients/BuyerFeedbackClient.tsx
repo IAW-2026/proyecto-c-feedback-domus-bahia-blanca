@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { createReview, getReviewsByTarget } from "@/app/actions/reviews"; 
 import { Send } from "lucide-react"; 
 import { useUser } from "@clerk/nextjs";
+import { propertyMocks } from "@/lib/mockProperty";
 
 interface FeedbackClientProps {
   targetId: string;
@@ -82,6 +83,8 @@ export default function FeedbackClient({ targetId }: FeedbackClientProps) {
     }
   };
 
+  const property = propertyMocks[targetId];
+
   return (
     <main className="min-h-screen bg-domus-bg px-4 md:px-8 py-8">
       <Toaster position="top-right" richColors />
@@ -92,7 +95,10 @@ export default function FeedbackClient({ targetId }: FeedbackClientProps) {
           
           <PropertyHero
             targetId={targetId}
-            imageUrl="/prueba-1.jpg"
+            imageUrl={property.imageUrl}
+            title={property.title}
+            location={property.location}
+            specs={property.specs}
           />
 
           <motion.section

@@ -184,7 +184,7 @@ export default function ReviewList({ reviews, isSeller = false }: ReviewListProp
 
       {reviews.length === 0 && (
         <p className="text-center text-domus-text-soft py-6">
-          No hay reseñas para esta propiedad aún. ¡Sé el primero!
+          No hay reseñas para esta propiedad aún.
         </p>
       )}
     </div>

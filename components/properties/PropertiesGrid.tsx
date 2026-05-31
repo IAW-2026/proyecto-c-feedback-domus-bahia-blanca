@@ -18,6 +18,12 @@ export interface PropertyItem {
   avgRating: number;
   address: string;
   reviewCount: number;
+  specs: {
+    bedrooms: number;
+    bathrooms: number;
+    meters: number;
+    garage: number;
+  };
 }
 
 interface PropertiesGridProps {
@@ -87,7 +93,7 @@ export default function PropertiesGrid({
           >
 
             {/* IMAGE */}
-            <div className="relative h-72 overflow-hidden">
+            <div className="relative h-56 overflow-hidden">
               <img
                 src={item.imageUrl}
                 alt="Propiedad"
@@ -107,8 +113,8 @@ export default function PropertiesGrid({
             </div>
 
             {/* CONTENT */}
-            <div className="p-6">
-              <h3 className="text-2xl font-bold text-domus-text group-hover:text-domus-primary transition-colors">
+            <div className="p-5">
+              <h3 className="text-xl font-bold text-domus-text group-hover:text-domus-primary transition-colors">
                 {item.address}
               </h3>
 
@@ -118,46 +124,42 @@ export default function PropertiesGrid({
               </p>
 
               {/* SPECS */}
-              <div className="grid grid-cols-4 gap-3 mt-6">
+              <div className="grid grid-cols-4 gap-3 mt-4">
                 <div className="text-center">
-                  <BedDouble
-                    size={18}
-                    className="mx-auto text-domus-text-soft"
-                  />
-                  <p className="font-bold text-domus-text mt-2">3</p>
+                  <BedDouble size={18} className="mx-auto text-domus-text-soft" />
+                  <p className="font-bold text-domus-text mt-2">
+                    {item.specs.bedrooms}
+                  </p>
                   <p className="text-xs text-domus-text-soft">Dorm.</p>
                 </div>
 
                 <div className="text-center">
-                  <Bath
-                    size={18}
-                    className="mx-auto text-domus-text-soft"
-                  />
-                  <p className="font-bold text-domus-text mt-2">2</p>
+                  <Bath size={18} className="mx-auto text-domus-text-soft" />
+                  <p className="font-bold text-domus-text mt-2">
+                    {item.specs.bathrooms}
+                  </p>
                   <p className="text-xs text-domus-text-soft">Baños</p>
                 </div>
 
                 <div className="text-center">
-                  <Ruler
-                    size={18}
-                    className="mx-auto text-domus-text-soft"
-                  />
-                  <p className="font-bold text-domus-text mt-2">120</p>
+                  <Ruler size={18} className="mx-auto text-domus-text-soft" />
+                  <p className="font-bold text-domus-text mt-2">
+                    {item.specs.meters}
+                  </p>
                   <p className="text-xs text-domus-text-soft">m²</p>
                 </div>
 
                 <div className="text-center">
-                  <CarFront
-                    size={18}
-                    className="mx-auto text-domus-text-soft"
-                  />
-                  <p className="font-bold text-domus-text mt-2">1</p>
+                  <CarFront size={18} className="mx-auto text-domus-text-soft" />
+                  <p className="font-bold text-domus-text mt-2">
+                    {item.specs.garage}
+                  </p>
                   <p className="text-xs text-domus-text-soft">Coch.</p>
                 </div>
               </div>
 
               {/* FOOTER */}
-              <div className="mt-6 pt-5 border-t border-domus-secondary flex items-center justify-between">
+              <div className="mt-4 pt-4 border-t border-domus-secondary flex items-center justify-between">
                 <p className="text-sm text-domus-text-soft">
                   {item.reviewCount} opiniones
                 </p>

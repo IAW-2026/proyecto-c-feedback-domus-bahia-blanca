@@ -198,24 +198,31 @@ export async function getPropertiesAvailableToReview(userId: string) {
       return [];
     }
 
-    const targetId = "123"; 
+    const targetIds = ["123", "234", "345"];
 
-    const stats = await db.review.aggregate({
-      where: { targetId },
-      _avg: { rating: true },
-      _count: { _all: true },
-    });
+    const properties = await Promise.all(
+      targetIds.map(async (targetId) => {
+        const stats = await db.review.aggregate({
+          where: { targetId },
+          _avg: { rating: true },
+          _count: { _all: true },
+        });
 
-    return [
-      {
-        id: targetId,
-        imageUrl: "/prueba-1.jpg", 
-        address: "Av. Alem 1234, Bahía Blanca", 
-        avgRating: stats._avg.rating || 0,    
-        reviewCount: stats._count._all || 0,   
-      }
-    ];
+        return {
+          id: targetId,
+          address:
+            targetId === "123"
+              ? "Av. Alem 1234, Bahía Blanca"
+              : targetId === "234"
+              ? "Zelarrayán 456, Bahía Blanca"
+              : "Sarmiento 890, Bahía Blanca",
+          avgRating: stats._avg.rating || 0,
+          reviewCount: stats._count._all || 0,
+        };
+      })
+    );
 
+    return properties;
   } catch (error) {
     console.error("Error en propiedades disponibles:", error);
     return [];

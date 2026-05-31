@@ -2,11 +2,18 @@ import { getAllRatedProperties } from "@/app/actions/reviews";
 import Link from "next/link";
 import { Star } from "lucide-react";
 import PropertiesGrid from "@/components/properties/PropertiesGrid";
+import { propertyMocks } from "@/lib/mockProperty";
 
 export default async function ReviewsPage() {
   const result = await getAllRatedProperties();
 
-  const properties = result?.success && result.data ? result.data : [];
+  const properties =
+    result?.success && result.data
+      ? result.data.map((property) => ({
+          ...property,
+          ...propertyMocks[property.id],
+        }))
+      : [];
 
   return (
     <main className="min-h-screen bg-domus-bg">
@@ -17,7 +24,10 @@ export default async function ReviewsPage() {
           <div>
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-full border-2 border-domus-terracota flex items-center justify-center">
-                <Star className="text-domus-terracota fill-domus-terracota" size={22} />
+                <Star
+                  className="text-domus-terracota fill-domus-terracota"
+                  size={22}
+                />
               </div>
 
               <div>
@@ -32,17 +42,18 @@ export default async function ReviewsPage() {
             </div>
           </div>
 
-          <Link 
-             href="/" 
-             className="group hidden md:flex items-center text-domus-terracota font-semibold gap-1 transition-colors duration-300"
+          <Link
+            href="/"
+            className="group inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-domus-terracota text-white border border-domus-terracota shadow-md hover:shadow-lg hover:opacity-90 transition-all duration-300 font-semibold"
           >
-            <span className="inline-block transform group-hover:-translate-x-1.5 transition-transform duration-300 ease-out">
-             ← 
+            <span className="group-hover:-translate-x-1 transition-transform duration-300">
+              ←
             </span>
-             Volver al inicio 
-        </Link>
+            Volver al inicio
+          </Link>
         </div>
-        {/* GRID REUTILIZADO */}
+
+        {/* GRID */}
         <PropertiesGrid properties={properties} />
       </section>
     </main>

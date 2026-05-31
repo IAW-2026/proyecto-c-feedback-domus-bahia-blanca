@@ -2,17 +2,34 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import {BedDouble, Bath, Ruler, CarFront, Building2,} from "lucide-react";
+import {
+  BedDouble,
+  Bath,
+  Ruler,
+  CarFront,
+  Building2,
+} from "lucide-react";
 import Link from "next/link";
 
 interface PropertyHeroProps {
   targetId: string;
   imageUrl: string;
+  title: string;
+  location: string;
+  specs: {
+    bedrooms: number;
+    bathrooms: number;
+    meters: number;
+    garage: number;
+  };
 }
 
 export default function PropertyHero({
   targetId,
   imageUrl,
+  title,
+  location,
+  specs,
 }: PropertyHeroProps) {
   return (
     <motion.section
@@ -25,103 +42,83 @@ export default function PropertyHero({
       <div className="relative w-full h-[420px] overflow-hidden">
         <Image
           src={imageUrl}
-          alt="Propiedad"
+          alt={title}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
           className="object-cover"
           priority
         />
 
-        {/* Overlay elegante */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
       </div>
 
       {/* INFO */}
       <div className="p-6 md:p-8">
-        
+
         {/* TITULO */}
         <div className="mb-5">
           <h2 className="text-3xl font-bold text-domus-text">
-            Torre Plaza
+            {title}
           </h2>
 
           <p className="text-domus-text-soft mt-2 flex items-center gap-2">
-            📍 Bahía Blanca, Buenos Aires
+            📍 {location}
           </p>
         </div>
 
         {/* STATS */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          
-          <div
-            className="bg-domus-bg rounded-2xl p-4 flex flex-col items-center text-center"
-          >
+
+          <div className="bg-domus-bg rounded-2xl p-4 flex flex-col items-center text-center">
             <BedDouble className="w-8 h-8 text-domus-text mb-1" />
-
             <span className="font-bold text-domus-text">
-              3
+              {specs.bedrooms}
             </span>
-
             <span className="text-sm text-domus-text-soft">
               Dormitorios
             </span>
           </div>
 
-          <div
-            className="bg-domus-bg rounded-2xl p-4 flex flex-col items-center text-center"
-          >
+          <div className="bg-domus-bg rounded-2xl p-4 flex flex-col items-center text-center">
             <Bath className="w-8 h-8 text-domus-text mb-1" />
-
             <span className="font-bold text-domus-text">
-              2
+              {specs.bathrooms}
             </span>
-
             <span className="text-sm text-domus-text-soft">
               Baños
             </span>
           </div>
 
-          <div
-            className="bg-domus-bg rounded-2xl p-4 flex flex-col items-center text-center"
-          >
+          <div className="bg-domus-bg rounded-2xl p-4 flex flex-col items-center text-center">
             <Ruler className="w-8 h-8 text-domus-text mb-1" />
-
             <span className="font-bold text-domus-text">
-              120m²
+              {specs.meters}m²
             </span>
-
             <span className="text-sm text-domus-text-soft">
               Superficie
             </span>
           </div>
 
-          <div
-            className="bg-domus-bg rounded-2xl p-4 flex flex-col items-center text-center"
-          >
+          <div className="bg-domus-bg rounded-2xl p-4 flex flex-col items-center text-center">
             <CarFront className="w-8 h-8 text-domus-text mb-1" />
-
             <span className="font-bold text-domus-text">
-              1
+              {specs.garage}
             </span>
-
             <span className="text-sm text-domus-text-soft">
               Cochera
             </span>
           </div>
+
         </div>
 
-       {/* BUTTON CORREGIDO */}
-       <Link
-            href="/not-found"
-          >
-      <button
-        className="w-full bg-domus-secondary hover:bg-domus-primary hover:text-white text-domus-text py-4 rounded-2xl font-semibold transition-all duration-300 flex items-center justify-center gap-x-2"
-      >
-        <Building2 size={25} className="shrink-0" />
-          Ver detalle del inmueble
-      </button>
-      </Link>
-    </div>
+        {/* BUTTON */}
+        <Link href="/not-found">
+          <button className="w-full bg-domus-secondary hover:bg-domus-primary hover:text-white text-domus-text py-4 rounded-2xl font-semibold transition-all duration-300 flex items-center justify-center gap-x-2">
+            <Building2 size={25} className="shrink-0" />
+            Ver detalle del inmueble
+          </button>
+        </Link>
+      </div>
     </motion.section>
   );
 }

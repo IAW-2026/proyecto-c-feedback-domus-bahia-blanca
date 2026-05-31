@@ -7,6 +7,7 @@ import ReviewList from "@/components/feedback/ReviewList";
 import { useEffect, useMemo, useState } from "react";
 import { getReviewsByTarget } from "@/app/actions/reviews";
 import { ShieldCheck, Star } from "lucide-react";
+import { propertyMocks } from "@/lib/mockProperty";
 
 interface SellerFeedbackClientProps {
   targetId: string;
@@ -18,6 +19,7 @@ export default function SellerFeedbackClient({
 
   const [reviews, setReviews] = useState<any[]>([]);
   const [expanded, setExpanded] = useState(false);
+  const property = propertyMocks[targetId];
 
   useEffect(() => {
     async function loadReviews() {
@@ -58,6 +60,10 @@ export default function SellerFeedbackClient({
   return { total, counts };
 }, [reviews]);
 
+  if (!property) {
+    return null;
+  }
+
   return (
     <main className="min-h-screen bg-domus-bg px-4 md:px-8 py-8">
       <Toaster position="top-right" richColors />
@@ -69,8 +75,11 @@ export default function SellerFeedbackClient({
           {/* LEFT */}
           <PropertyHero
             targetId={targetId}
-            imageUrl="/prueba-1.jpg"
-          />
+            imageUrl={property.imageUrl}
+            title={property.title}
+            location={property.location}
+            specs={property.specs}
+           />
 
           {/* RIGHT PANEL */}
           <motion.section
