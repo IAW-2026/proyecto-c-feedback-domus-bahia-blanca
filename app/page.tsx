@@ -13,7 +13,7 @@ import { propertyMocks } from "@/lib/mockProperty"; //mocks temporales
 
 export default async function HomePage() {
   const [result, reviewsCountResult] = await Promise.all([
-  getTopRatedProperties(),
+  getTopRatedProperties(4),
   getTotalReviewsCount(),
 ]);
   const { userId } = await auth();
@@ -21,8 +21,11 @@ export default async function HomePage() {
   const topProperties =
     result?.success && result.data ? result.data : [];
 
+  const sortedProperties = [...topProperties].sort((a, b) => b.avgRating - a.avgRating);
+
   const totalReviews =
     reviewsCountResult?.success ? reviewsCountResult.total : 0;
+
   return (
     <main className="min-h-screen bg-domus-bg overflow-x-hidden">
       {/* CADA PARTE DE LA PAGINA TIENE SU COMPONENTE */}
@@ -32,10 +35,11 @@ export default async function HomePage() {
       <HeroSection totalReviews={totalReviews} />
 
       <TopRatedSection
-          properties={topProperties.map((property) => ({
+          properties={sortedProperties.map((property) => ({
             ...property,
             ...propertyMocks[property.id],
           }))}
+          basePath={"/publicReviews"}
         />
 
        <HomeFooter />

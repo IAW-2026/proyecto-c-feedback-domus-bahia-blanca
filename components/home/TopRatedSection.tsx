@@ -9,10 +9,12 @@ import PropertiesGrid, {
 
 interface TopRatedSectionProps {
   properties: PropertyItem[];
+  basePath: string;
 }
 
 export default function TopRatedSection({
   properties,
+  basePath
 }: TopRatedSectionProps) {
   return (
     <section
@@ -62,7 +64,7 @@ export default function TopRatedSection({
       </motion.div>
 
       {/* GRID */}
-      <PropertiesGrid properties={properties} />
+      <PropertiesGrid properties={properties} basePath={basePath}/>
     </section>
   );
 }

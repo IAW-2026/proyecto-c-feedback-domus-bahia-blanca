@@ -3,6 +3,7 @@
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { auth, clerkClient } from "@clerk/nextjs/server";
+import { propertyMocks } from "@/lib/mockProperty";
 
 export async function createReview(data: {
   authorId: string;
@@ -57,7 +58,7 @@ export async function createReviewResponse(reviewId: string, content: string) {
   return { success: true, data: response };
 }
 
-export async function getTopRatedProperties() {
+export async function getTopRatedProperties(limit?: number) {
   try {
     const reviews = await db.review.findMany();
 
@@ -68,25 +69,28 @@ export async function getTopRatedProperties() {
           count: 0,
         };
       }
-
       acc[review.targetId].total += review.rating;
       acc[review.targetId].count += 1;
-
       return acc;
     }, {});
 
-    const dataWithMockInfo = Object.entries(grouped).map(([targetId, data]: any) => ({
-      id: targetId,
-      avgRating: data.total / data.count,
-      reviewCount: data.count,
-      address: `Propiedad en Zona ${targetId.split("-")[1] || targetId}`,
-      imageUrl: "/prueba-1.jpg",
-    }));
+    const dataWithMockInfo = Object.entries(grouped)
+      .map(([targetId, data]: any) => {
+        const mock = propertyMocks[targetId];
+        return {
+          id: targetId,
+          avgRating: data.total / data.count,
+          reviewCount: data.count,
+          address: mock?.title ?? `Propiedad ${targetId}`,
+          imageUrl: mock?.imageUrl ?? "/prueba-1.jpg",
+        };
+      })
+      .sort((a, b) => b.avgRating - a.avgRating)
+      .slice(0, limit);
 
     return { success: true, data: dataWithMockInfo };
   } catch (error) {
     console.error(error);
-
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",
@@ -114,7 +118,6 @@ export async function getReviewsByTarget(targetId: string) {
 
 export async function getAllRatedProperties() {
   try {
-
     const topRated = await db.review.groupBy({
       by: ["targetId"],
       _avg: { rating: true },
@@ -126,23 +129,23 @@ export async function getAllRatedProperties() {
       },
     });
 
-    const dataWithMockInfo = topRated.map((item) => ({
-      id: item.targetId,
-      avgRating: item._avg.rating || 0,
-      reviewCount: item._count._all,
-      address: `Propiedad en Zona ${item.targetId.split("-")[1] || item.targetId}`,
-      imageUrl: "/prueba-1.jpg",
-    }));
+    const dataWithMockInfo = topRated.map((item) => {
+      const mock = propertyMocks[item.targetId];
+      return {
+        id: item.targetId,
+        avgRating: item._avg.rating || 0,
+        reviewCount: item._count._all,
+        address: mock?.title ?? `Propiedad ${item.targetId}`,
+        imageUrl: mock?.imageUrl ?? "/prueba-1.jpg",
+      };
+    });
 
     return {
       success: true,
       data: dataWithMockInfo,
     };
-
   } catch (error) {
-
     console.error(error);
-
     return {
       success: false,
       error: "Error al obtener ranking",
@@ -198,10 +201,11 @@ export async function getPropertiesAvailableToReview(userId: string) {
       return [];
     }
 
-    const targetIds = ["123", "234", "345"];
+    const targetIds = Object.keys(propertyMocks);
 
     const properties = await Promise.all(
       targetIds.map(async (targetId) => {
+        const mock = propertyMocks[targetId];
         const stats = await db.review.aggregate({
           where: { targetId },
           _avg: { rating: true },
@@ -210,12 +214,8 @@ export async function getPropertiesAvailableToReview(userId: string) {
 
         return {
           id: targetId,
-          address:
-            targetId === "123"
-              ? "Av. Alem 1234, Bahía Blanca"
-              : targetId === "234"
-              ? "Zelarrayán 456, Bahía Blanca"
-              : "Sarmiento 890, Bahía Blanca",
+          address: mock.title,
+          imageUrl: mock.imageUrl,
           avgRating: stats._avg.rating || 0,
           reviewCount: stats._count._all || 0,
         };

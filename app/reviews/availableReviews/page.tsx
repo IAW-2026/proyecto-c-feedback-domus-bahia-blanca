@@ -67,10 +67,10 @@ export default async function NewReviewSelectionPage() {
 
           <Link
             href="/"
-            className="text-domus-terracota font-semibold hover:gap-3 transition-all flex items-center gap-2 self-start md:self-auto"
+            className="group inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-domus-terracota text-white border border-domus-terracota shadow-md hover:shadow-lg hover:opacity-90 transition-all duration-300 font-semibold"
           >
-            <span className="inline-block transform group-hover:-translate-x-1.5 transition-transform duration-300 ease-out">
-             ← 
+            <span className="group-hover:-translate-x-1 transition-transform duration-300">
+              ←
             </span>
             Volver al inicio
           </Link>

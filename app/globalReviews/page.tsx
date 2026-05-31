@@ -54,7 +54,7 @@ export default async function ReviewsPage() {
         </div>
 
         {/* GRID */}
-        <PropertiesGrid properties={properties} />
+        <PropertiesGrid properties={properties} basePath={"/publicReviews"}/>
       </section>
     </main>
   );
