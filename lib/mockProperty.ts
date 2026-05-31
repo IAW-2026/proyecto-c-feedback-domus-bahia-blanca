@@ -16,7 +16,7 @@ export const propertyMocks: Record<string, PropertyMockData> = {
     id: "123",
     title: "Torre Plaza",
     location: "Bahía Blanca, Buenos Aires",
-    imageUrl: "/prueba-1.jpg",
+    imageUrl: "/prueba-1.webp",
     specs: {
       bedrooms: 3,
       bathrooms: 2,
@@ -29,7 +29,7 @@ export const propertyMocks: Record<string, PropertyMockData> = {
     id: "234",
     title: "Residencias Alem",
     location: "Bahía Blanca, Buenos Aires",
-    imageUrl: "/prueba-2.jpg",
+    imageUrl: "/prueba-2.webp",
     specs: {
       bedrooms: 2,
       bathrooms: 1,
@@ -42,7 +42,7 @@ export const propertyMocks: Record<string, PropertyMockData> = {
     id: "345",
     title: "Vista Sarmiento",
     location: "Bahía Blanca, Buenos Aires",
-    imageUrl: "/prueba-3.jpg",
+    imageUrl: "/prueba-3.webp",
     specs: {
       bedrooms: 4,
       bathrooms: 3,
@@ -55,7 +55,7 @@ export const propertyMocks: Record<string, PropertyMockData> = {
     id: "456",
     title: "Palermo Chico",
     location: "Bahía Blanca, Buenos Aires",
-    imageUrl: "/prueba-4.jpg",
+    imageUrl: "/prueba-4.webp",
     specs: {
       bedrooms: 2,
       bathrooms: 1,
@@ -68,7 +68,7 @@ export const propertyMocks: Record<string, PropertyMockData> = {
     id: "567",
     title: "Edificio Rosedal",
     location: "Bahía Blanca, Buenos Aires",
-    imageUrl: "/prueba-5.jpg",
+    imageUrl: "/prueba-5.webp",
     specs: {
       bedrooms: 3,
       bathrooms: 2,
@@ -81,7 +81,7 @@ export const propertyMocks: Record<string, PropertyMockData> = {
     id: "678",
     title: "Complejo Pacífico",
     location: "Bahía Blanca, Buenos Aires",
-    imageUrl: "/prueba-6.jpg",
+    imageUrl: "/prueba-6.webp",
     specs: {
       bedrooms: 1,
       bathrooms: 1,
@@ -94,7 +94,7 @@ export const propertyMocks: Record<string, PropertyMockData> = {
     id: "789",
     title: "Portal del Sur",
     location: "Bahía Blanca, Buenos Aires",
-    imageUrl: "/prueba-7.jpg",
+    imageUrl: "/prueba-7.webp",
     specs: {
       bedrooms: 4,
       bathrooms: 2,
@@ -107,7 +107,7 @@ export const propertyMocks: Record<string, PropertyMockData> = {
     id: "890",
     title: "Villa Mitre Suites",
     location: "Bahía Blanca, Buenos Aires",
-    imageUrl: "/prueba-8.jpg",
+    imageUrl: "/prueba-8.webp",
     specs: {
       bedrooms: 2,
       bathrooms: 1,
@@ -120,7 +120,7 @@ export const propertyMocks: Record<string, PropertyMockData> = {
     id: "901",
     title: "Barrio Universitario",
     location: "Bahía Blanca, Buenos Aires",
-    imageUrl: "/prueba-9.jpg",
+    imageUrl: "/prueba-9.webp",
     specs: {
       bedrooms: 3,
       bathrooms: 2,
@@ -133,7 +133,7 @@ export const propertyMocks: Record<string, PropertyMockData> = {
     id: "012",
     title: "Alto Palihue",
     location: "Bahía Blanca, Buenos Aires",
-    imageUrl: "/prueba-10.jpg",
+    imageUrl: "/prueba-10.webp",
     specs: {
       bedrooms: 5,
       bathrooms: 3,

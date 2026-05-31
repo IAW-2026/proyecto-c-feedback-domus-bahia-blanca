@@ -82,7 +82,7 @@ export async function getTopRatedProperties(limit?: number) {
           avgRating: data.total / data.count,
           reviewCount: data.count,
           address: mock?.title ?? `Propiedad ${targetId}`,
-          imageUrl: mock?.imageUrl ?? "/prueba-1.jpg",
+          imageUrl: mock?.imageUrl ?? "/prueba-1.webp",
         };
       })
       .sort((a, b) => b.avgRating - a.avgRating)
@@ -136,7 +136,7 @@ export async function getAllRatedProperties() {
         avgRating: item._avg.rating || 0,
         reviewCount: item._count._all,
         address: mock?.title ?? `Propiedad ${item.targetId}`,
-        imageUrl: mock?.imageUrl ?? "/prueba-1.jpg",
+        imageUrl: mock?.imageUrl ?? "/prueba-1.webp",
       };
     });
 

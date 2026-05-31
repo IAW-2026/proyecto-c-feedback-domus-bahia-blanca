@@ -172,7 +172,7 @@ export default function HeroSection({
               <div className="absolute inset-0 bg-domus-terracota/10 blur-3xl scale-110" />
 
               <img
-                src="/bahia_caricatura_2.0.png"
+                src="/bahia_caricatura_2.0.webp"
                 alt="Domus"
                 className="relative w-full h-full object-cover opacity-95"
               />
