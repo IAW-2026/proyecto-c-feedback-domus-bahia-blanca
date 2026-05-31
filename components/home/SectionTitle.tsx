@@ -8,7 +8,7 @@ export default function SectionTitle() {
   return (
     <motion.div
       className="flex items-center justify-between"
-      initial={{ opacity: 0, y: 60, filter: "blur(12px)" }}
+      initial={{ opacity: 0, y: 70, filter: "blur(12px)" }}
       whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       viewport={{ once: false, amount: 0.3 }}
       transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}

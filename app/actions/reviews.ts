@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 export async function createReview(data: {
   authorId: string;
@@ -32,6 +33,28 @@ export async function createReview(data: {
     const errorMessage = error instanceof Error ? error.message : String(error);
     return { success: false, error: errorMessage };
   }
+}
+
+export async function createReviewResponse(reviewId: string, content: string) {
+  const { userId } = await auth();
+
+  if (!userId) return { success: false, error: "No autenticado" };
+
+  const existing = await db.reviewResponse.findUnique({
+    where: { reviewId },
+  });
+
+  if (existing) return { success: false, error: "Ya existe una respuesta" };
+
+  const response = await db.reviewResponse.create({
+    data: {
+      reviewId,
+      content,
+      authorId: userId,
+    },
+  });
+
+  return { success: true, data: response };
 }
 
 export async function getTopRatedProperties() {
@@ -76,7 +99,10 @@ export async function getReviewsByTarget(targetId: string) {
     const reviews = await db.review.findMany({
       where: { targetId },
       orderBy: {
-        createdAt: "desc", 
+        createdAt: "desc",
+      },
+      include: {
+        response: true,
       },
     });
     return { success: true, data: reviews };
@@ -124,6 +150,8 @@ export async function getAllRatedProperties() {
   }
 }
 
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //comentado hasta que me conecte con shipping app y me avise si puede (o no) el usuario dar una reseña en el id de la publicacion al que intenta ingresar.
 {/*export async function checkIfUserCanReview(userId: string, targetId: string): Promise<boolean> {
   try {
@@ -155,12 +183,12 @@ export async function getAllRatedProperties() {
     return false; // Ante la duda o fallo, bloqueamos el acceso por seguridad
   }
 }*/}
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 // true  = Simula que el usuario SÍ tiene propiedades listas para reseñar.
 // false = Simula que el usuario NO tiene ninguna propiedad (0).
 const MOCK_HAS_PROPERTIES = true; 
-
-// app/actions/reviews.ts
 
 export async function getPropertiesAvailableToReview(userId: string) {
   try {
@@ -170,24 +198,21 @@ export async function getPropertiesAvailableToReview(userId: string) {
       return [];
     }
 
-    // ID de la propiedad real que querés usar para las pruebas
     const targetId = "123"; 
 
-    // 1. Vamos a buscar a la base de datos las reseñas REALES que ya existen para este ID
     const stats = await db.review.aggregate({
       where: { targetId },
       _avg: { rating: true },
       _count: { _all: true },
     });
 
-    // 2. Retornamos el array combinando los datos fijos del inmueble con las estadísticas de la DB
     return [
       {
         id: targetId,
-        imageUrl: "/prueba-1.jpg", // Tu foto local que no rompe Next.js
-        address: "Av. Alem 1234, Bahía Blanca", // Nombre definitivo e idéntico al de tus pruebas
-        avgRating: stats._avg.rating || 0,     // ← REAL: Calculado de la DB
-        reviewCount: stats._count._all || 0,   // ← REAL: Calculado de la DB
+        imageUrl: "/prueba-1.jpg", 
+        address: "Av. Alem 1234, Bahía Blanca", 
+        avgRating: stats._avg.rating || 0,    
+        reviewCount: stats._count._all || 0,   
       }
     ];
 
@@ -197,7 +222,7 @@ export async function getPropertiesAvailableToReview(userId: string) {
   }
 }
 
-export async function getTotalReviewsCount() { //sirve para la homepage en el cartel de "mas de X cantidad de reseñas"
+export async function getTotalReviewsCount() { //sirve para la homepage, en el cartel de "mas de X cantidad de reseñas"
   try {
     const total = await db.review.count();
 
@@ -219,4 +244,5 @@ export async function getUserRole(userId: string) {
   // después vendrá desde las otras apps
   return "buyer";
 }
+
 

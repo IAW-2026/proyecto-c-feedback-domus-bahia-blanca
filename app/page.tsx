@@ -43,7 +43,7 @@ export default async function HomePage() {
               <>
                 <SignInButton
                   mode="modal"
-                  forceRedirectUrl="/reviews/new"
+                  forceRedirectUrl="/"
                 >
                   <button className="border border-domus-secondary px-5 py-3 rounded-2xl hover:bg-domus-secondary transition cursor-pointer">
                     Ingresar
@@ -52,7 +52,7 @@ export default async function HomePage() {
 
                 <SignUpButton
                   mode="modal"
-                  forceRedirectUrl="/reviews/new"
+                  forceRedirectUrl="/reviews/availableReviews"
                 >
                   <button className="bg-domus-primary text-white px-5 py-3 rounded-2xl hover:bg-domus-primary-mid transition shadow-md cursor-pointer">
                     Dejar una reseña
@@ -85,7 +85,7 @@ export default async function HomePage() {
       <HeroSection totalReviews={totalReviews} />
 
       {/* SEPARADOR */}
-      <div className="max-w-7xl mx-auto px-6 pb-10">
+      <div className="max-w-7xl mx-auto px-6 pb-4">
         <div className="h-px bg-gradient-to-r from-transparent via-domus-secondary to-transparent" />
       </div>
 

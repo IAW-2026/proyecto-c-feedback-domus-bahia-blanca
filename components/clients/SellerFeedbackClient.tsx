@@ -17,6 +17,7 @@ export default function SellerFeedbackClient({
 }: SellerFeedbackClientProps) {
 
   const [reviews, setReviews] = useState<any[]>([]);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     async function loadReviews() {
@@ -32,7 +33,6 @@ export default function SellerFeedbackClient({
     if (targetId) loadReviews();
   }, [targetId]);
 
-  // --- promedio dinámico ---
   const avgRating = useMemo(() => {
     if (!reviews.length) return 0;
 
@@ -170,14 +170,17 @@ export default function SellerFeedbackClient({
             </div>
 
             {/* REVIEWS */}
-            <div className="flex flex-col gap-4 max-h-[250px] overflow-y-auto pr-2">
-              <ReviewList reviews={reviews} />
+            <div className={`flex flex-col gap-4 overflow-y-auto pr-2 transition-all duration-500 ${expanded ? "max-h-[600px]" : "max-h-[250px]"}`}>
+              <ReviewList reviews={reviews} isSeller={true} />
             </div>
 
             {/* LOAD MORE */}
             <div className="mt-8 flex justify-center">
-              <button className="px-8 py-4 rounded-2xl border border-domus-secondary bg-white hover:bg-domus-secondary/20 transition font-semibold text-domus-primary">
-                Cargar más reseñas
+              <button
+                onClick={() => setExpanded((prev) => !prev)}
+                className="px-60 py-2 rounded-2xl border border-domus-secondary bg-white hover:bg-domus-secondary/100 transition font-semibold text-domus-primary"
+              >
+                {expanded ? "Contraer lista" : "Expandir lista"}
               </button>
             </div>
 

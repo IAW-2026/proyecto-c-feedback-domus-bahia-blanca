@@ -75,7 +75,6 @@ export default async function NewReviewSelectionPage() {
           </Link>
         </div>
 
-        {/* GRILLA REUTILIZABLE */}
         {/* Pasamos basePath="/reviews" para redirigir a tu formulario app/reviews/[targetId] */}
         <PropertiesGrid properties={properties} basePath="/reviews"/>
 

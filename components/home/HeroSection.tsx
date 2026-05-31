@@ -21,12 +21,12 @@ export default function HeroSection({
   // --- EFECTO SCROLL ---
   const opacity = useTransform(scrollY, [0, 350], [1, 0]);
   const scale = useTransform(scrollY, [0, 350], [1, 0.82]);
-  const y = useTransform(scrollY, [0, 350], [0, -120]);
+  const y = useTransform(scrollY, [0, 350], [0, -60]);
   const blur = useTransform(scrollY, [0, 350], [0, 8]);
   const filter = useMotionTemplate`blur(${blur}px)`;
 
   return (
-    <section className="max-w-7xl mx-auto px-6 pt-20 pb-20 overflow-hidden">
+    <section className="max-w-7xl mx-auto px-6 pt-20 pb-4 overflow-hidden">
 
       <motion.div
         style={{

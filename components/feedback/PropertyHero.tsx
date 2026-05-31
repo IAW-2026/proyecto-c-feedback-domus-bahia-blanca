@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import {BedDouble, Bath, Ruler, CarFront, Building2,} from "lucide-react";
+import Link from "next/link";
 
 interface PropertyHeroProps {
   targetId: string;
@@ -110,12 +111,16 @@ export default function PropertyHero({
         </div>
 
        {/* BUTTON CORREGIDO */}
+       <Link
+            href="/not-found"
+          >
       <button
         className="w-full bg-domus-secondary hover:bg-domus-primary hover:text-white text-domus-text py-4 rounded-2xl font-semibold transition-all duration-300 flex items-center justify-center gap-x-2"
       >
         <Building2 size={25} className="shrink-0" />
           Ver detalle del inmueble
       </button>
+      </Link>
     </div>
     </motion.section>
   );
