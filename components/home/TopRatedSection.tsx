@@ -1,5 +1,5 @@
 "use client";
-
+import { useIsMobile } from "@/hooks/useIsMobile";
 import Link from "next/link";
 import { Star } from "lucide-react";
 import { motion } from "framer-motion";
@@ -16,6 +16,7 @@ export default function TopRatedSection({
   properties,
   basePath
 }: TopRatedSectionProps) {
+  const isMobile = useIsMobile();
   return (
     <section
       id="top-properties"
@@ -24,13 +25,10 @@ export default function TopRatedSection({
       {/* TITLE */}
       <motion.div
         className="flex items-center justify-between mb-6"
-        initial={{ opacity: 0, y: 70, filter: "blur(12px)" }}
+        initial={{ opacity: isMobile ? 1 : 0, y: isMobile ? 0 : 70, filter: isMobile ? "blur(0px)" : "blur(12px)" }}
         whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
         viewport={{ once: false, amount: 0.3 }}
-        transition={{
-          duration: 1.5,
-          ease: [0.22, 1, 0.36, 1],
-        }}
+        transition={{ duration: isMobile ? 0 : 1.5, ease: [0.22, 1, 0.36, 1] }}
       >
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 rounded-full border-2 border-domus-terracota flex items-center justify-center">

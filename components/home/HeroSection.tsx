@@ -1,12 +1,8 @@
 "use client";
 
+import { useIsMobile } from "@/hooks/useIsMobile";
 import Link from "next/link";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useMotionTemplate,
-} from "framer-motion";
+import {motion, useScroll, useTransform, useMotionTemplate} from "framer-motion";
 import { ShieldCheck, Star, Users } from "lucide-react";
 
 interface HeroSectionProps {
@@ -35,37 +31,13 @@ export default function HeroSection({
   totalReviews,
 }: HeroSectionProps) {
   const { scrollY } = useScroll();
-
+  const isMobile = useIsMobile();
   // Fade adaptativo
-  const fadeDistance =
-  typeof window !== "undefined"
-    ? window.innerHeight * 2.7
-    : 900;
-
-  const opacity = useTransform(
-    scrollY,
-    [0, fadeDistance],
-    [1, 0]
-  );
-
-  const scale = useTransform(
-    scrollY,
-    [0, fadeDistance],
-    [1, 0.9]
-  );
-
-  const y = useTransform(
-    scrollY,
-    [0, fadeDistance],
-    [0, -35]
-  );
-
-  const blur = useTransform(
-    scrollY,
-    [0, fadeDistance],
-    [0, 8]
-  );
-
+  const fadeDistance = typeof window !== "undefined" ? window.innerHeight * 2.7 : 900;
+  const opacity = useTransform(scrollY, [0, fadeDistance], isMobile ? [1, 1] : [1, 0]);
+  const scale = useTransform(scrollY, [0, fadeDistance], isMobile ? [1, 1] : [1, 0.9]);
+  const y = useTransform(scrollY, [0, fadeDistance], isMobile ? [0, 0] : [0, -35]);
+  const blur = useTransform(scrollY, [0, fadeDistance], isMobile ? [0, 0] : [0, 8]);
   const filter = useMotionTemplate`blur(${blur}px)`;
 
   return (
@@ -81,20 +53,9 @@ export default function HeroSection({
       >
         {/* LEFT */}
         <motion.div
-          initial={{
-            opacity: 0,
-            x: -50,
-            filter: "blur(6px)",
-          }}
-          animate={{
-            opacity: 1,
-            x: 0,
-            filter: "blur(0px)",
-          }}
-          transition={{
-            duration: 0.8,
-            ease: [0.22, 1, 0.36, 1],
-          }}
+          initial={{ opacity: isMobile ? 1 : 0, x: isMobile ? 0 : -50, filter: isMobile ? "blur(0px)" : "blur(6px)" }}
+          animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+          transition={{ duration: isMobile ? 0 : 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
           <div>
             {/* BADGE */}
@@ -198,21 +159,11 @@ export default function HeroSection({
 
         {/* RIGHT */}
         <motion.div
-          initial={{
-            opacity: 0,
-            filter: "blur(6px)",
-          }}
-          animate={{
-            opacity: 1,
-            filter: "blur(0px)",
-          }}
-          transition={{
-            duration: 0.8,
-            delay: 0.2,
-            ease: [0.22, 1, 0.36, 1],
-          }}
+          initial={{ opacity: isMobile ? 1 : 0, filter: isMobile ? "blur(0px)" : "blur(6px)" }}
+          animate={{ opacity: 1, filter: "blur(0px)" }}
+          transition={{ duration: isMobile ? 0 : 0.8, delay: isMobile ? 0 : 0.2, ease: [0.22, 1, 0.36, 1] }}
           className="hidden xl:flex justify-center items-center"
-        >
+         >
           <div className="flex justify-center items-center w-full">
             <div className="w-full h-[300px] xl:h-[340px] 2xl:h-[430px] rounded-[30px] relative overflow-hidden">
               {/* glow */}

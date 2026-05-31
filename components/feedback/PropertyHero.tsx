@@ -1,14 +1,7 @@
 "use client";
-
 import Image from "next/image";
 import { motion } from "framer-motion";
-import {
-  BedDouble,
-  Bath,
-  Ruler,
-  CarFront,
-  Building2,
-} from "lucide-react";
+import { BedDouble, Bath, Ruler, CarFront, Building2, } from "lucide-react";
 import Link from "next/link";
 
 interface PropertyHeroProps {
@@ -22,6 +15,7 @@ interface PropertyHeroProps {
     meters: number;
     garage: number;
   };
+  isMobile?: boolean;
 }
 
 export default function PropertyHero({
@@ -30,14 +24,15 @@ export default function PropertyHero({
   title,
   location,
   specs,
+  isMobile = false,
 }: PropertyHeroProps) {
   return (
     <motion.section
-      initial={{ y: 40, opacity: 0 }}
+      initial={{ y: isMobile ? 0 : 40, opacity: isMobile ? 1 : 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.7 }}
+      transition={{ duration: isMobile ? 0 : 0.7 }}
       className="bg-domus-card rounded-3xl overflow-hidden shadow-lg border border-domus-secondary h-fit"
-    >
+     >
       {/* IMAGEN */}
       <div className="relative w-full h-[420px] overflow-hidden">
         <Image

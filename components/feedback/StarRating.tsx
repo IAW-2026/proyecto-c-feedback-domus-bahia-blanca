@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Star } from "lucide-react"; 
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 interface StarRatingProps {
   rating: number;
@@ -12,14 +13,14 @@ export default function StarRating({ rating, setRating }: StarRatingProps) {
   const handleClick = (star: number) => {
     setRating(star);
   };
-
+  const isMobile = useIsMobile();
   return (
     <div className="flex gap-2 sm:gap-3 items-center justify-center w-full">
       {[1, 2, 3, 4, 5].map((star) => (
         <motion.button
           key={star}
           type="button"
-          whileHover={{ scale: 1.15 }}
+          whileHover={isMobile ? {} : { scale: 1.15 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => handleClick(star)}
           className="focus:outline-none"

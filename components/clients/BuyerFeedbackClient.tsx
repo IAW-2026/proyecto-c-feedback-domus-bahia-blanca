@@ -10,6 +10,7 @@ import { createReview, getReviewsByTarget } from "@/app/actions/reviews";
 import { Send } from "lucide-react"; 
 import { useUser } from "@clerk/nextjs";
 import { propertyMocks } from "@/lib/mockProperty";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 interface FeedbackClientProps {
   targetId: string;
@@ -17,7 +18,7 @@ interface FeedbackClientProps {
 
 export default function FeedbackClient({ targetId }: FeedbackClientProps) {
   const { user } = useUser();
-
+  const isMobile = useIsMobile();
   // --- ESTADOS ---
   const [rating, setRating] = useState(0);
   const [content, setContent] = useState("");
@@ -99,12 +100,13 @@ export default function FeedbackClient({ targetId }: FeedbackClientProps) {
             title={property.title}
             location={property.location}
             specs={property.specs}
+            isMobile={isMobile} 
           />
 
           <motion.section
-            initial={{ y: 40, opacity: 0 }}
+            initial={{ y: isMobile ? 0 : 40, opacity: isMobile ? 1 : 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
+            transition={{ duration: isMobile ? 0 : 0.7, ease: "easeOut" }}
             className="bg-domus-card rounded-3xl shadow-lg border border-domus-secondary p-8 md:p-10 flex flex-col"
           >
             <div className="mb-8">
@@ -159,10 +161,10 @@ export default function FeedbackClient({ targetId }: FeedbackClientProps) {
 
         {/* LISTADO (HISTORIAL) */}
         <motion.section
-            initial={{ y: 40, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
-            className="bg-domus-card rounded-3xl border border-domus-secondary shadow-lg p-6 md:p-8"
+          initial={{ y: isMobile ? 0 : 40, opacity: isMobile ? 1 : 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: isMobile ? 0 : 0.7, ease: "easeOut", delay: isMobile ? 0 : 0.2 }}
+          className="bg-domus-card rounded-3xl border border-domus-secondary shadow-lg p-6 md:p-8"
         >
           <div className="flex items-center justify-between mb-8">
             <div>

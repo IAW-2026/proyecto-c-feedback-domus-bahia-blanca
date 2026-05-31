@@ -1,5 +1,5 @@
 "use client";
-
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { motion } from "framer-motion";
 import { Toaster, toast } from "sonner";
 import PropertyHero from "@/components/feedback/PropertyHero";
@@ -20,7 +20,7 @@ export default function SellerFeedbackClient({
   const [reviews, setReviews] = useState<any[]>([]);
   const [expanded, setExpanded] = useState(false);
   const property = propertyMocks[targetId];
-
+  const isMobile = useIsMobile();
   useEffect(() => {
     async function loadReviews() {
       const result = await getReviewsByTarget(targetId);
@@ -79,13 +79,14 @@ export default function SellerFeedbackClient({
             title={property.title}
             location={property.location}
             specs={property.specs}
+            isMobile={isMobile} 
            />
 
           {/* RIGHT PANEL */}
           <motion.section
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: isMobile ? 1 : 0, y: isMobile ? 0 : 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: isMobile ? 0 : 0.6 }}
             className="bg-domus-card rounded-3xl border border-domus-secondary shadow-lg p-8 flex flex-col"
           >
 

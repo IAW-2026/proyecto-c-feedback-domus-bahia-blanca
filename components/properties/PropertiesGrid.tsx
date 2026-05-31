@@ -1,5 +1,5 @@
 "use client";
-
+import { useIsMobile } from "@/hooks/useIsMobile";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -36,6 +36,8 @@ export default function PropertiesGrid({
   basePath = "/properties",
 }: PropertiesGridProps) {
 
+  const isMobile = useIsMobile();
+
   if (!properties || properties.length === 0) {
     return (
       <div className="text-center py-24 bg-domus-card rounded-3xl border-2 border-dashed border-domus-secondary">
@@ -60,7 +62,7 @@ export default function PropertiesGrid({
         hidden: {},
         show: {
           transition: {
-            staggerChildren: 0.18,
+            staggerChildren: isMobile ? 0 : 0.18,
           },
         },
       }}
@@ -70,10 +72,10 @@ export default function PropertiesGrid({
           key={item.id}
           variants={{
             hidden: {
-              opacity: 0,
-              y: 70,
-              scale: 0.94,
-              filter: "blur(12px)",
+              opacity: isMobile ? 1 : 0,
+              y: isMobile ? 0 : 70,
+              scale: isMobile ? 1 : 0.94,
+              filter: isMobile ? "blur(0px)" : "blur(12px)",
             },
             show: {
               opacity: 1,
@@ -81,16 +83,16 @@ export default function PropertiesGrid({
               scale: 1,
               filter: "blur(0px)",
               transition: {
-                duration: 1.2,
+                duration: isMobile ? 0 : 1.2,
                 ease: [0.22, 1, 0.36, 1],
               },
             },
           }}
-        >
+         >
           <Link
             href={`${basePath}/${item.id}`}
             className="group block bg-domus-card rounded-3xl overflow-hidden border border-domus-secondary shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
-          >
+           >
 
             {/* IMAGE */}
             <div className="relative h-56 overflow-hidden">
