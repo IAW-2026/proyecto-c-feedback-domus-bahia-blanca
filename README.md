@@ -36,7 +36,7 @@ viajando desde la seller-app, no desde esta misma app.
 y cuando pertenezcan a la misma inmobiliaria que hizo la publicación (tarea a realizar).
 ---
 
-## 📝 Descripción del proyecto
+## Descripción del proyecto
 
 Domus Bahía Blanca desde la app de feedback es una plataforma de reseñas inmobiliarias orientada al mercado local. Permite a compradores y visitantes dejar reseñas verificadas sobre propiedades, ayudando a otros usuarios a tomar decisiones más informadas basadas en experiencias reales.
 
@@ -46,7 +46,7 @@ La aplicación fue construida con Next.js 16.2.4, Prisma 7.8.0, Supabase (Postgr
 
 ---
 
-## 📌 Notas para la corrección
+## Notas para la corrección
 
 Arquitectura y componentización: la landing page está dividida en componentes independientes (HeroSection, TopRatedSection, FooterSection, Navbar, SectionTitle) con el objetivo de tener control granular sobre el diseño, los efectos de scroll y la reusabilidad. Los clientes de cada rol (BuyerFeedbackClient, SellerFeedbackClient, PublicPropertyReviewsClient) son componentes separados que reciben el mismo targetId pero renderizan experiencias distintas según el rol detectado en el servidor antes de hacer el render.
 
