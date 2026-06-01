@@ -65,9 +65,9 @@ export default function PropertiesGrid({
           variants={{
             hidden: {
               opacity: isMobile ? 1 : 0,
-              y: isMobile ? 0 : 70,
-              scale: isMobile ? 1 : 0.94,
-              filter: isMobile ? "blur(0px)" : "blur(12px)",
+              y: isMobile ? 0 : 30,
+              scale: isMobile ? 1 : 0.97,
+              filter: isMobile ? "blur(0px)" : "blur(4px)",
             },
             show: {
               opacity: 1,
@@ -75,7 +75,7 @@ export default function PropertiesGrid({
               scale: 1,
               filter: "blur(0px)",
               transition: {
-                duration: isMobile ? 0 : 1.2,
+                duration: isMobile ? 0 : 0.7,
                 ease: [0.22, 1, 0.36, 1],
               },
             },

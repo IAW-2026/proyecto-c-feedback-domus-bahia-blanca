@@ -3,11 +3,10 @@ import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 
 interface NavbarProps {
   userId: string | null;
+  role?: string;
 }
 
-export default function Navbar({
-  userId,
-}: NavbarProps) {
+export default function Navbar({ userId, role }: NavbarProps) {
   return (
     <nav className="border-b border-domus-secondary bg-domus-card/80 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -23,24 +22,18 @@ export default function Navbar({
           </p>
         </div>
 
-        {/* ACTIONS */}
+       {/* ACTIONS */}
         <div className="flex items-center gap-2 md:gap-4">
 
           {!userId ? (
             <>
-              <SignInButton
-                mode="modal"
-                forceRedirectUrl="/"
-              >
+              <SignInButton mode="modal" forceRedirectUrl="/">
                 <button className="border border-domus-secondary px-3 md:px-5 py-2 md:py-3 rounded-xl md:rounded-2xl hover:bg-domus-secondary transition cursor-pointer text-sm md:text-base">
                   Ingresar
                 </button>
               </SignInButton>
 
-              <SignUpButton
-                mode="modal"
-                forceRedirectUrl="/reviews/availableReviews"
-              >
+              <SignUpButton mode="modal" forceRedirectUrl="/reviews/availableReviews">
                 <button className="bg-domus-primary text-white px-3 md:px-5 py-2 md:py-3 rounded-xl md:rounded-2xl hover:bg-domus-primary-mid transition shadow-md cursor-pointer text-sm md:text-base">
                   Dejar una reseña
                 </button>
@@ -48,6 +41,14 @@ export default function Navbar({
             </>
           ) : (
             <>
+              {role === "admin" && (
+                <Link href="/admin">
+                  <button className="border border-domus-secondary px-3 md:px-5 py-2 md:py-3 rounded-xl md:rounded-2xl hover:bg-domus-secondary transition cursor-pointer text-sm md:text-base text-domus-text font-medium">
+                    Panel Admin
+                  </button>
+                </Link>
+              )}
+
               <Link href="/reviews/availableReviews">
                 <button className="bg-domus-primary text-white px-3 md:px-5 py-2 md:py-3 rounded-xl md:rounded-2xl hover:bg-domus-primary-mid transition shadow-md cursor-pointer text-sm md:text-base">
                   Dejar una reseña
@@ -57,8 +58,7 @@ export default function Navbar({
               <UserButton
                 appearance={{
                   elements: {
-                    avatarBox:
-                      "w-9 h-9 md:w-11 md:h-11 border border-domus-secondary shadow-sm",
+                    avatarBox: "w-9 h-9 md:w-11 md:h-11 border border-domus-secondary shadow-sm",
                   },
                 }}
               />

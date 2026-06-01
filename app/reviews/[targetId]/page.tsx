@@ -22,7 +22,7 @@ export default async function FeedbackPage({
 
   const { targetId } = await params;
 
-  // PERMISOS: con la union de aplicaciones esto funcionará
+  // PERMISOS: con la union de aplicaciones esto funcionará, mientras tanto queda comentado.
   /*
   const canReview = await checkIfUserCanReview(
     userId,
@@ -46,9 +46,11 @@ export default async function FeedbackPage({
     );
   }
 
-  return (
-    <BuyerFeedbackClient
-      targetId={targetId}
-    />
-  );
+  if (role === "buyer") {
+    return (
+      <BuyerFeedbackClient
+        targetId={targetId}
+      />
+    );
+  }
 }

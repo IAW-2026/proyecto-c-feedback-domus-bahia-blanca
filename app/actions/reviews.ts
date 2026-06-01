@@ -245,11 +245,61 @@ export async function getTotalReviewsCount() { //sirve para la homepage, en el c
   }
 }
 
-export async function getUserRole(userId: string) {   
+export async function getUserRole(
+  userId: string
+): Promise<"buyer" | "seller" | "admin"> {
+  try {
+    const client = await clerkClient();
+    const user = await client.users.getUser(userId);
 
-  // MOCK TEMPORAL
-  // después vendrá desde las otras apps
-  return "buyer";
+    const role =
+      user.publicMetadata?.role;
+
+    if (
+      role === "seller" ||
+      role === "admin" ||
+      role === "buyer"
+    ) {
+      return role;
+    }
+
+    return "buyer";
+
+  } catch {
+    return "buyer";
+  }
 }
 
+export async function getAdminStats() {
+  try {
+    const [totalReviews, avgResult, withResponse] = await Promise.all([
+      db.review.count(),
+      db.review.aggregate({ _avg: { rating: true } }),
+      db.review.count({ where: { response: { isNot: null } } }),
+    ]);
+
+    return {
+      success: true,
+      data: {
+        totalReviews,
+        avgRating: avgResult._avg.rating || 0,
+        withResponse,
+        withoutResponse: totalReviews - withResponse,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return { success: false, data: null };
+  }
+}
+
+export async function deleteReview(reviewId: string) {
+  try {
+    await db.review.delete({ where: { id: reviewId } });
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { success: false, error: "Error al eliminar la reseña" };
+  }
+}
 
