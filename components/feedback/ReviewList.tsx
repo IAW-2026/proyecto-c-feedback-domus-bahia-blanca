@@ -14,7 +14,7 @@ interface ReviewResponse {
 interface ReviewProps {
   id: string;
   authorId: string;
-  authorName?: string | null;
+  authorName?: string | "Nombre no registrado";
   authorImageUrl?: string | null;
   rating: number;
   content: string;

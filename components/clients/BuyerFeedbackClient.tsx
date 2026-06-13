@@ -107,7 +107,7 @@ export default function FeedbackClient({ targetId }: FeedbackClientProps) {
     try {
       const result = await createReview({
         authorId: user.id, 
-        authorName: user.fullName || `${user.firstName} ${user.lastName}`,
+        authorName: user.fullName || (user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : 'Usuario Anónimo'),
         authorImageUrl: user.imageUrl,
         targetId: targetId, 
         visitId: crypto.randomUUID(),
