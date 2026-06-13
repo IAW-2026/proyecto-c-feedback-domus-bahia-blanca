@@ -11,6 +11,9 @@ import { Send } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { propertyMocks } from "@/lib/mockProperty";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 interface FeedbackClientProps {
   targetId: string;
@@ -18,7 +21,21 @@ interface FeedbackClientProps {
 
 export default function FeedbackClient({ targetId }: FeedbackClientProps) {
   const { user } = useUser();
+  const router = useRouter();
   const isMobile = useIsMobile();
+  const forbiddenWords = [
+    "mierda",
+    "pelotudo",
+    "gil",
+    "hijo de puta",
+    "pajero",
+    "pelotudes",
+    "pelotudez",
+    "verga",
+    "basura"
+   ];
+   const [alternateWarning, setAlternateWarning] = useState(false);
+
   // --- ESTADOS ---
   const [rating, setRating] = useState(0);
   const [content, setContent] = useState("");
@@ -52,7 +69,39 @@ export default function FeedbackClient({ targetId }: FeedbackClientProps) {
       toast.error("Debes iniciar sesión para publicar.");
       return;
     }
+    
+    function normalize(text: string) {
+      return text
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/1/g, "i")
+        .replace(/3/g, "e")
+        .replace(/4/g, "a")
+        .replace(/5/g, "s")
+        .replace(/8/g, "b")
+        .replace(/0/g, "o")
+        .replace(/\s+/g, "")
+        .trim();
+    }
 
+    const normalizedContent = normalize(content);
+
+    const containsForbiddenWord = forbiddenWords.some((word) =>
+      normalizedContent.includes(normalize(word))
+    );
+    
+    if (containsForbiddenWord) {
+      toast.error(
+        alternateWarning
+          ? 'Intenta con "No me gustó" y listo...'
+          : "Tu reseña contiene palabras inapropiadas. Por favor revísala antes de publicar."
+      );
+
+      setAlternateWarning(prev => !prev);
+      return;
+    }
+    
     setIsPending(true);
 
     try {
@@ -68,11 +117,10 @@ export default function FeedbackClient({ targetId }: FeedbackClientProps) {
 
       if (result.success) {
         toast.success("¡Reseña publicada con éxito!");
-        if (result.review) {
-          setReviews((prev) => [result.review, ...prev]);
-        }
-        setRating(0);
-        setContent("");
+        setTimeout(() => {
+          router.push("/");
+          router.refresh();
+        }, 1500); // espera 1.5s para que el usuario vea el toast antes de redirigir
       } else {
         toast.error("Error al guardar: " + result.error);
       }
@@ -89,8 +137,8 @@ export default function FeedbackClient({ targetId }: FeedbackClientProps) {
   return (
     <main className="min-h-screen bg-domus-bg px-4 md:px-8 py-8">
       <Toaster position="top-right" richColors />
+
       <div className="max-w-7xl mx-auto flex flex-col gap-8">
-        
         {/* HERO + FORM */}
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_1.2fr] gap-8 items-start">
           

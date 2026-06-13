@@ -8,6 +8,8 @@ import { useEffect, useMemo, useState } from "react";
 import { getReviewsByTarget } from "@/app/actions/reviews";
 import { ShieldCheck, Star } from "lucide-react";
 import { propertyMocks } from "@/lib/mockProperty";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 interface PublicPropertyReviewsClientProps {
   targetId: string;
@@ -74,7 +76,7 @@ export default function PublicPropertyReviewsClient({
   return (
     <main className="min-h-screen bg-domus-bg px-4 md:px-8 py-8">
       <Toaster position="top-right" richColors />
-
+    
       <div className="max-w-7xl mx-auto">
 
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_1.35fr] gap-8 items-start">
