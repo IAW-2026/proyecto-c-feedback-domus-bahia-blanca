@@ -72,6 +72,18 @@ export default function SellerFeedbackClient({
       
       <div className="max-w-7xl mx-auto">
 
+        <div className="mb-2">
+        <Link
+          href="/globalReviews"
+          className="group inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-domus-terracota text-white border border-domus-terracota shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300 font-semibold"
+        >
+          <span className="group-hover:-translate-x-1 transition-transform duration-300">
+            ←
+          </span>
+          Volver
+        </Link>
+        </div>
+
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_1.35fr] gap-8 items-start">
 
           {/* LEFT */}
@@ -85,11 +97,7 @@ export default function SellerFeedbackClient({
            />
 
           {/* RIGHT PANEL */}
-          <motion.section
-            initial={{ opacity: isMobile ? 1 : 0, y: isMobile ? 0 : 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: isMobile ? 0 : 0.6 }}
-            className="bg-domus-card rounded-3xl border border-domus-secondary shadow-lg p-8 flex flex-col"
+          <section className="bg-domus-card rounded-3xl border border-domus-secondary shadow-lg p-8 flex flex-col"
           >
 
             {/* HEADER */}
@@ -209,7 +217,7 @@ export default function SellerFeedbackClient({
               </p>
             </div>
 
-          </motion.section>
+          </section>
         </div>
       </div>
     </main>

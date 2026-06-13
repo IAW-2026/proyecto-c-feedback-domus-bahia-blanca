@@ -139,6 +139,19 @@ export default function FeedbackClient({ targetId }: FeedbackClientProps) {
       <Toaster position="top-right" richColors />
 
       <div className="max-w-7xl mx-auto flex flex-col gap-8">
+
+        <div className="mb-2">
+          <Link
+            href="/globalReviews"
+            className="group inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-domus-terracota text-white border border-domus-terracota shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300 font-semibold"
+          >
+            <span className="group-hover:-translate-x-1 transition-transform duration-300">
+              ←
+            </span>
+            Volver
+          </Link>
+        </div>
+
         {/* HERO + FORM */}
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_1.2fr] gap-8 items-start">
           
@@ -151,11 +164,7 @@ export default function FeedbackClient({ targetId }: FeedbackClientProps) {
             isMobile={isMobile} 
           />
 
-          <motion.section
-            initial={{ y: isMobile ? 0 : 40, opacity: isMobile ? 1 : 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: isMobile ? 0 : 0.7, ease: "easeOut" }}
-            className="bg-domus-card rounded-3xl shadow-lg border border-domus-secondary p-8 md:p-10 flex flex-col"
+          <section className="bg-domus-card rounded-3xl shadow-lg border border-domus-secondary p-8 md:p-10 flex flex-col"
           >
             <div className="mb-8">
               <h2 className="text-3xl font-bold text-domus-text mb-2">
@@ -204,7 +213,7 @@ export default function FeedbackClient({ targetId }: FeedbackClientProps) {
               {!isPending && <Send size={20} />}
               {isPending ? "Publicando..." : "Publicar reseña"}
             </button>
-          </motion.section>
+          </section>
         </div>
 
         {/* LISTADO (HISTORIAL) */}

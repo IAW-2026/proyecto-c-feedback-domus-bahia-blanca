@@ -27,11 +27,7 @@ export default function PropertyHero({
   isMobile = false,
 }: PropertyHeroProps) {
   return (
-    <motion.section
-      initial={{ y: isMobile ? 0 : 40, opacity: isMobile ? 1 : 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: isMobile ? 0 : 0.7 }}
-      className="bg-domus-card rounded-3xl overflow-hidden shadow-lg border border-domus-secondary h-fit"
+    <section className="bg-domus-card rounded-3xl overflow-hidden shadow-lg border border-domus-secondary h-fit"
      >
       {/* IMAGEN */}
       <div className="relative w-full h-[420px] overflow-hidden">
@@ -114,6 +110,6 @@ export default function PropertyHero({
           </button>
         </Link>
       </div>
-    </motion.section>
+    </section>
   );
 }
