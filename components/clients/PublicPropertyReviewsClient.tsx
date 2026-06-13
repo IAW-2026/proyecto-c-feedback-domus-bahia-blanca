@@ -83,8 +83,8 @@ export default function PublicPropertyReviewsClient({
           <PropertyHero
             targetId={targetId}
             imageUrl={property.imageUrl}
-            title={property.location}
-            location="Bahía Blanca, Buenos Aires"
+            title={property.title}
+            location={property.location}
             specs={property.specs}
             isMobile={isMobile} 
           />

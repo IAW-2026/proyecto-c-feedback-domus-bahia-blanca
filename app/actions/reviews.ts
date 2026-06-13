@@ -29,10 +29,11 @@ export async function createReview(data: {
 
     revalidatePath("/"); 
     return { success: true, review };
-  } catch (error) {
-    console.error("Error al crear reseña:", error);
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    return { success: false, error: errorMessage };
+  } catch (error: any) {
+    if (error.code === "P2002") {
+      return { success: false, error: "Ya dejaste una reseña para esta propiedad." };
+    }
+    return { success: false, error: error.message };
   }
 }
 
@@ -201,7 +202,17 @@ export async function getPropertiesAvailableToReview(userId: string) {
       return [];
     }
 
-    const targetIds = Object.keys(propertyMocks);
+    // reseñas que ya dejó este usuario
+    const existingReviews = await db.review.findMany({
+      where: { authorId: userId },
+      select: { targetId: true },
+    });
+
+    const reviewedIds = new Set(existingReviews.map((r) => r.targetId));
+
+    const targetIds = Object.keys(propertyMocks).filter(
+      (id) => !reviewedIds.has(id)
+    );
 
     const properties = await Promise.all(
       targetIds.map(async (targetId) => {
