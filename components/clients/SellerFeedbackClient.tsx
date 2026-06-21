@@ -7,21 +7,31 @@ import ReviewList from "@/components/feedback/ReviewList";
 import { useEffect, useMemo, useState } from "react";
 import { getReviewsByTarget } from "@/app/actions/reviews";
 import { ShieldCheck, Star } from "lucide-react";
-import { propertyMocks } from "@/lib/mockProperty";
-import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 interface SellerFeedbackClientProps {
   targetId: string;
+  property: {
+    id: string;
+    title: string;
+    location: string;
+    imageUrl: string;
+    specs: {
+      bedrooms: number;
+      bathrooms: number;
+      meters: number;
+      garage: number;
+    };
+  };
 }
 
 export default function SellerFeedbackClient({
   targetId,
+  property,
 }: SellerFeedbackClientProps) {
 
   const [reviews, setReviews] = useState<any[]>([]);
   const [expanded, setExpanded] = useState(false);
-  const property = propertyMocks[targetId];
   const isMobile = useIsMobile();
   useEffect(() => {
     async function loadReviews() {
@@ -61,10 +71,6 @@ export default function SellerFeedbackClient({
 
   return { total, counts };
 }, [reviews]);
-
-  if (!property) {
-    return null;
-  }
 
   return (
     <main className="min-h-screen bg-domus-bg px-4 md:px-8 py-8">

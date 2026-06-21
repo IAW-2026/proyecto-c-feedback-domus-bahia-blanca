@@ -8,7 +8,7 @@ export interface PropertyItem {
   id: string;
   imageUrl: string;
   avgRating: number;
-  address: string;
+  location: string;
   reviewCount: number;
   specs: {
     bedrooms: number;
@@ -90,7 +90,7 @@ export default function PropertiesGrid({
             <div className="relative h-56 overflow-hidden">
               <img
                 src={item.imageUrl}
-                alt={`Foto de ${item.address}`}
+                alt={`Foto de ${item.location}`}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
               />
 
@@ -112,7 +112,7 @@ export default function PropertiesGrid({
             {/* CONTENT */}
             <div className="p-5">
               <h3 className="text-xl font-bold text-domus-text group-hover:text-domus-primary transition-colors">
-                {item.address}
+                {item.location}
               </h3>
 
               <p className="text-domus-text-soft mt-2 flex items-center gap-2">

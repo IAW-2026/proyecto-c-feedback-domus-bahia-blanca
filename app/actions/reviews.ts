@@ -1,9 +1,9 @@
 "use server";
-
+import { getPropertyById } from "@/lib/sellerApi";
+import { getPropertiesByIds, getAllPublishedProperties } from "@/lib/sellerApi";
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { propertyMocks } from "@/lib/mockProperty";
 
 export async function createReview(data: {
   authorId: string;
@@ -59,43 +59,86 @@ export async function createReviewResponse(reviewId: string, content: string) {
   return { success: true, data: response };
 }
 
+export async function getProperty(targetId: string) {
+  try {
+    const property = await getPropertyById(targetId);
+
+    if (!property) {
+      return {
+        success: false,
+        error: "Propiedad no encontrada",
+      };
+    }
+
+    return {
+      success: true,
+      data: {
+        id: property.id,
+        title: property.title,
+        location: property.location ?? property.address ?? "Ubicación no disponible",
+        imageUrl:
+          property.multimedia?.find(
+            (m: any) => m.fileType === "IMAGE"
+          )?.fileUrl ?? "/prueba-1.webp",
+        specs: {
+          bedrooms: property.bedrooms ?? 0,
+          bathrooms: property.bathrooms ?? 0,
+          meters: property.totalSqMeters ?? 0,
+          garage: 0,
+        },
+      },
+    };
+  } catch (error) {
+    console.error("Error obteniendo propiedad:", error);
+
+    return {
+      success: false,
+      error: "No se pudo obtener la propiedad",
+    };
+  }
+}
+
 export async function getTopRatedProperties(limit?: number) {
   try {
     const reviews = await db.review.findMany();
 
     const grouped = reviews.reduce((acc: any, review) => {
       if (!acc[review.targetId]) {
-        acc[review.targetId] = {
-          total: 0,
-          count: 0,
-        };
+        acc[review.targetId] = { total: 0, count: 0 };
       }
       acc[review.targetId].total += review.rating;
       acc[review.targetId].count += 1;
       return acc;
     }, {});
 
-    const dataWithMockInfo = Object.entries(grouped)
-      .map(([targetId, data]: any) => {
-        const mock = propertyMocks[targetId];
+    const targetIds = Object.keys(grouped);
+    const properties = await getPropertiesByIds(targetIds);
+
+    const data = Object.entries(grouped)
+      .map(([targetId, stats]: any) => {
+        const prop = properties.find((p: any) => p.id === targetId);
+        const imageUrl = prop?.multimedia?.find((m: any) => m.fileType === "IMAGE")?.fileUrl ?? "/prueba-1.webp";
         return {
           id: targetId,
-          avgRating: data.total / data.count,
-          reviewCount: data.count,
-          address: mock?.title ?? `Propiedad ${targetId}`,
-          imageUrl: mock?.imageUrl ?? "/prueba-1.webp",
+          avgRating: stats.total / stats.count,
+          reviewCount: stats.count,
+          location: prop?.title ?? prop?.location ?? `Propiedad ${targetId}`,
+          imageUrl,
+          specs: {
+            bedrooms: prop?.bedrooms ?? 0,
+            bathrooms: prop?.bathrooms ?? 0,
+            meters: prop?.totalSqMeters ?? 0,
+            garage: 0,
+          },
         };
       })
       .sort((a, b) => b.avgRating - a.avgRating)
       .slice(0, limit);
 
-    return { success: true, data: dataWithMockInfo };
+    return { success: true, data };
   } catch (error) {
     console.error(error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
   }
 }
 
@@ -123,112 +166,113 @@ export async function getAllRatedProperties() {
       by: ["targetId"],
       _avg: { rating: true },
       _count: { _all: true },
-      orderBy: {
-        _avg: {
-          rating: "desc",
-        },
-      },
+      orderBy: { _avg: { rating: "desc" } },
     });
 
-    const dataWithMockInfo = topRated.map((item) => {
-      const mock = propertyMocks[item.targetId];
+    const targetIds = topRated.map((item) => item.targetId);
+    const properties = await getPropertiesByIds(targetIds);
+
+    const data = topRated.map((item) => {
+      const prop = properties.find((p: any) => p.id === item.targetId);
+      const imageUrl = prop?.multimedia?.find((m: any) => m.fileType === "IMAGE")?.fileUrl ?? "/prueba-1.webp";
       return {
         id: item.targetId,
         avgRating: item._avg.rating || 0,
         reviewCount: item._count._all,
-        address: mock?.title ?? `Propiedad ${item.targetId}`,
-        imageUrl: mock?.imageUrl ?? "/prueba-1.webp",
+        location: prop?.title ?? prop?.location ?? `Propiedad ${item.targetId}`,
+        imageUrl,
+        specs: {
+          bedrooms: prop?.bedrooms ?? 0,
+          bathrooms: prop?.bathrooms ?? 0,
+          meters: prop?.totalSqMeters ?? 0,
+          garage: 0,
+        },
       };
     });
 
-    return {
-      success: true,
-      data: dataWithMockInfo,
-    };
+    return { success: true, data };
   } catch (error) {
     console.error(error);
-    return {
-      success: false,
-      error: "Error al obtener ranking",
-    };
+    return { success: false, error: "Error al obtener ranking" };
   }
 }
 
 
-//------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//comentado hasta que me conecte con shipping app y me avise si puede (o no) el usuario dar una reseña en el id de la publicacion al que intenta ingresar.
-{/*export async function checkIfUserCanReview(userId: string, targetId: string): Promise<boolean> {
+export async function checkIfUserCanReview(userId: string, targetId: string): Promise<boolean> {
   try {
-    //acá iría el URL de shipping app
-    const response = await fetch(`https://api-partner.domus.com/appointments/${targetId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      cache: "no-store", 
-    });
+    const response = await fetch(
+      `https://proyecto-c-shipping-domus-bahia.vercel.app/api/turnos/comprador/${userId}?estado=COMPLETADO`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
 
     if (!response.ok) {
       console.error("Error al conectar con el módulo del compañero");
       return false;
     }
 
-    const operation = await response.json();
+    const turnos = await response.json();
 
-    //acá compruebo si el estado es completado para tal user.
-    if (operation.status === "completado" && operation.buyerId === userId) {
-      return true;
+    if (!Array.isArray(turnos)) {
+      console.error("Respuesta inesperada del módulo de turnos");
+      return false;
     }
 
-    return false;
-    
+    const hasCompletedVisit = turnos.some(
+      (turno: any) =>
+        turno.propiedadId === targetId &&
+        turno.compradorId === userId &&
+        turno.estado === "COMPLETADO"
+    );
+
+    return hasCompletedVisit;
   } catch (error) {
     console.error("Error crítico en checkIfUserCanReview:", error);
-    return false; // Ante la duda o fallo, bloqueamos el acceso por seguridad
+    return false; 
   }
-}*/}
-//------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-// true  = Simula que el usuario SÍ tiene propiedades listas para reseñar.
-// false = Simula que el usuario NO tiene ninguna propiedad (0).
-const MOCK_HAS_PROPERTIES = true; 
+}
 
 export async function getPropertiesAvailableToReview(userId: string) {
   try {
-    await new Promise((resolve) => setTimeout(resolve, 400));
-
-    if (!MOCK_HAS_PROPERTIES) {
-      return [];
-    }
-
-    // reseñas que ya dejó este usuario
-    const existingReviews = await db.review.findMany({
-      where: { authorId: userId },
-      select: { targetId: true },
-    });
+    const [allProperties, existingReviews] = await Promise.all([
+      getAllPublishedProperties(),
+      db.review.findMany({
+        where: { authorId: userId },
+        select: { targetId: true },
+      }),
+    ]);
 
     const reviewedIds = new Set(existingReviews.map((r) => r.targetId));
 
-    const targetIds = Object.keys(propertyMocks).filter(
-      (id) => !reviewedIds.has(id)
-    );
+    const available = allProperties.filter((p: any) => !reviewedIds.has(p.id));
 
     const properties = await Promise.all(
-      targetIds.map(async (targetId) => {
-        const mock = propertyMocks[targetId];
+      available.map(async (prop: any) => {
         const stats = await db.review.aggregate({
-          where: { targetId },
+          where: { targetId: prop.id },
           _avg: { rating: true },
           _count: { _all: true },
         });
 
+        const imageUrl = prop.multimedia?.find((m: any) => m.fileType === "IMAGE")?.fileUrl ?? "/prueba-1.webp";
+
         return {
-          id: targetId,
-          address: mock.title,
-          imageUrl: mock.imageUrl,
+          id: prop.id,
+          location: prop.title ?? prop.location ?? `Propiedad ${prop.id}`,
+          imageUrl,
           avgRating: stats._avg.rating || 0,
           reviewCount: stats._count._all || 0,
+          specs: {
+            bedrooms: prop.bedrooms ?? 0,
+            bathrooms: prop.bathrooms ?? 0,
+            meters: prop.totalSqMeters ?? 0,
+            garage: 0,
+          },
         };
       })
     );

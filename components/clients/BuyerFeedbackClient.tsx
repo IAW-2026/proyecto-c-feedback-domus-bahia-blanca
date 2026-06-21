@@ -9,17 +9,27 @@ import { useState, useEffect } from "react";
 import { createReview, getReviewsByTarget } from "@/app/actions/reviews"; 
 import { Send } from "lucide-react"; 
 import { useUser } from "@clerk/nextjs";
-import { propertyMocks } from "@/lib/mockProperty";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 interface FeedbackClientProps {
   targetId: string;
+  property: {
+    id: string;
+    title: string;
+    location: string;
+    imageUrl: string;
+    specs: {
+      bedrooms: number;
+      bathrooms: number;
+      meters: number;
+      garage: number;
+    };
+  };
 }
 
-export default function FeedbackClient({ targetId }: FeedbackClientProps) {
+export default function FeedbackClient({targetId,property,}: FeedbackClientProps) {
   const { user } = useUser();
   const router = useRouter();
   const isMobile = useIsMobile();
@@ -131,8 +141,6 @@ export default function FeedbackClient({ targetId }: FeedbackClientProps) {
       setIsPending(false);
     }
   };
-
-  const property = propertyMocks[targetId];
 
   return (
     <main className="min-h-screen bg-domus-bg px-4 md:px-8 py-8">

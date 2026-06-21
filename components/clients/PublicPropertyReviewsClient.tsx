@@ -7,16 +7,27 @@ import ReviewList from "@/components/feedback/ReviewList";
 import { useEffect, useMemo, useState } from "react";
 import { getReviewsByTarget } from "@/app/actions/reviews";
 import { ShieldCheck, Star } from "lucide-react";
-import { propertyMocks } from "@/lib/mockProperty";
-import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 interface PublicPropertyReviewsClientProps {
   targetId: string;
+  property: {
+    id: string;
+    title: string;
+    location: string;
+    imageUrl: string;
+    specs: {
+      bedrooms: number;
+      bathrooms: number;
+      meters: number;
+      garage: number;
+    };
+  };
 }
 
 export default function PublicPropertyReviewsClient({
   targetId,
+  property,
 }: PublicPropertyReviewsClientProps) {
 
   const [reviews, setReviews] = useState<any[]>([]);
@@ -35,8 +46,6 @@ export default function PublicPropertyReviewsClient({
 
     if (targetId) loadReviews();
   }, [targetId]);
-
-  const property = propertyMocks[targetId];
 
   const avgRating = useMemo(() => {
     if (!reviews.length) return 0;
@@ -62,16 +71,6 @@ export default function PublicPropertyReviewsClient({
 
     return { total, counts };
   }, [reviews]);
-
-  if (!property) {
-    return (
-      <main className="min-h-screen bg-domus-bg flex items-center justify-center">
-        <p className="text-domus-text-soft">
-          Propiedad no encontrada.
-        </p>
-      </main>
-    );
-  }
 
   return (
     <main className="min-h-screen bg-domus-bg px-4 md:px-8 py-8">

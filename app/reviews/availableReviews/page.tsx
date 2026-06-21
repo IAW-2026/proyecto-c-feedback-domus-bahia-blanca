@@ -4,7 +4,6 @@ import Link from "next/link";
 import { ClipboardX, ArrowLeft } from "lucide-react";
 import PropertiesGrid from "@/components/properties/PropertiesGrid";
 import { getPropertiesAvailableToReview } from "@/app/actions/reviews";
-import { propertyMocks } from "@/lib/mockProperty";
 
 export default async function NewReviewSelectionPage() {
   // 1. Validar autenticación en el servidor
@@ -78,10 +77,7 @@ export default async function NewReviewSelectionPage() {
 
         {/* Pasamos basePath="/reviews" para redirigir a tu formulario app/reviews/[targetId] */}
         <PropertiesGrid
-          properties={properties.map((property) => ({
-            ...property,
-            ...propertyMocks[property.id],
-          }))}
+          properties={properties}
           basePath="/reviews"
         />
 

@@ -4,7 +4,6 @@ import HeroSection from "@/components/home/HeroSection";
 import TopRatedSection from "@/components/home/TopRatedSection";
 import HomeFooter from "@/components/home/FooterSection";
 import Navbar from "@/components/home/Navbar";
-import { propertyMocks } from "@/lib/mockProperty"; //mocks temporales
 
 
 export default async function HomePage() {
@@ -33,12 +32,9 @@ export default async function HomePage() {
       <HeroSection totalReviews={totalReviews} />
 
       <TopRatedSection
-          properties={sortedProperties.map((property) => ({
-            ...property,
-            ...propertyMocks[property.id],
-          }))}
-          basePath={"/publicReviews"}
-        />
+        properties={sortedProperties}
+        basePath="/publicReviews"
+      />
 
        <HomeFooter />
 

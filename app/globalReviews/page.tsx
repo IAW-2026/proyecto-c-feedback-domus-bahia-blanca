@@ -2,18 +2,14 @@ import { getAllRatedProperties } from "@/app/actions/reviews";
 import Link from "next/link";
 import { Star } from "lucide-react";
 import PropertiesGrid from "@/components/properties/PropertiesGrid";
-import { propertyMocks } from "@/lib/mockProperty";
 
 export default async function ReviewsPage() {
   const result = await getAllRatedProperties();
 
   const properties =
-    result?.success && result.data
-      ? result.data.map((property) => ({
-          ...property,
-          ...propertyMocks[property.id],
-        }))
-      : [];
+  result?.success && result.data
+    ? result.data
+    : [];
 
   return (
     <main className="min-h-screen bg-domus-bg">

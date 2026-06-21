@@ -1,7 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { getAdminStats, getAllRatedProperties } from "@/app/actions/reviews";
 import { db } from "@/lib/db";
-import { propertyMocks } from "@/lib/mockProperty";
 import AdminNavbar from "@/components/admin/AdminNavbar";
 import AdminDashboardClient from "@/components/admin/AdminDashboardClient";
 import { ShieldCheck, Star, MessageSquare, MessageSquareOff } from "lucide-react";
@@ -22,8 +21,10 @@ export default async function AdminPage() {
   const stats = statsResult.data;
   const properties = propertiesResult.success ? propertiesResult.data ?? [] : [];
   const reviews = allReviews.map((r) => ({
-    ...r,
-    propertyTitle: propertyMocks[r.targetId]?.title ?? `Propiedad ${r.targetId}`,
+  ...r,
+  propertyTitle:
+    properties.find((p) => p.id === r.targetId)?.location ??
+    `Propiedad ${r.targetId}`,
   }));
 
   return (
@@ -102,7 +103,7 @@ export default async function AdminPage() {
                 {properties.map((p, i) => (
                   <tr key={p.id} className="border-b border-domus-secondary/50 hover:bg-domus-secondary/20 transition">
                     <td className="px-6 py-4 text-domus-text-soft">{i + 1}</td>
-                    <td className="px-6 py-4 font-semibold text-domus-text">{p.address}</td>
+                    <td className="px-6 py-4 font-semibold text-domus-text">{p.location}</td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <Star size={14} className="fill-yellow-400 text-yellow-400" />
