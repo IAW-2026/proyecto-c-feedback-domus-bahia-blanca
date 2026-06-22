@@ -36,6 +36,7 @@ export async function GET(
         rating: true,
         content: true,
         authorName: true,
+        authorImageUrl: true,
         createdAt: true,
       },
     });
