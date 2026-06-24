@@ -23,7 +23,6 @@ export default function PropertyHero({
   title,
   location,
   specs,
-  isMobile = false,
 }: PropertyHeroProps) {
   return (
     <section className="bg-domus-card rounded-3xl overflow-hidden shadow-lg border border-domus-secondary h-fit"
@@ -99,7 +98,7 @@ export default function PropertyHero({
         </div>
 
         {/* BUTTON */}
-        <Link href="/not-found">
+        <Link href={`/properties/${targetId}`}>
           <button className="w-full bg-domus-secondary hover:bg-domus-primary hover:text-white text-domus-text py-4 rounded-2xl font-semibold transition-all duration-300 flex items-center justify-center gap-x-2">
             <Building2 size={25} className="shrink-0" />
             Ver detalle del inmueble

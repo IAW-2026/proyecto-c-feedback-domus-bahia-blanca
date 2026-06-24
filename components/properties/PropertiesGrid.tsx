@@ -2,7 +2,7 @@
 import { useIsMobile } from "@/hooks/useIsMobile";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {Star, Heart, MapPin, BedDouble, Bath, Ruler, CarFront} from "lucide-react";
+import {Star, MapPin, BedDouble, Bath, Ruler, CarFront} from "lucide-react";
 
 export interface PropertyItem {
   id: string;
@@ -100,13 +100,6 @@ export default function PropertiesGrid({
                 {item.avgRating.toFixed(1)}
               </div>
 
-              {/* FAVORITE */}
-              <button
-                  aria-label="Añadir a favoritos"
-                  className="absolute top-4 right-4 w-12 h-12 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center shadow-md"
-                >
-                <Heart size={20} className="text-domus-text" />
-              </button>
             </div>
 
             {/* CONTENT */}
