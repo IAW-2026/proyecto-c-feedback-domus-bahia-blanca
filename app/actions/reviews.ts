@@ -316,6 +316,11 @@ export async function getUserRole(
     const client = await clerkClient();
     const user = await client.users.getUser(userId);
 
+    console.log(
+      "publicMetadata:",
+      JSON.stringify(user.publicMetadata, null, 2)
+    );
+
     const roles = user.publicMetadata.role as string[];
 
     return roles.map((role) =>
