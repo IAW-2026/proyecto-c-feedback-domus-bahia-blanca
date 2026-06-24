@@ -217,10 +217,6 @@ export async function checkIfUserCanReview(userId: string, targetId: string): Pr
     }
 
     const turnos = await response.json();
-    
-    console.log("Turnos recibidos:", JSON.stringify(turnos));
-    console.log("Cantidad de turnos:", Array.isArray(turnos) ? turnos.length : "no es array");
-
 
     if (!Array.isArray(turnos)) {
       console.error("Respuesta inesperada del módulo de turnos");
@@ -232,23 +228,22 @@ export async function checkIfUserCanReview(userId: string, targetId: string): Pr
     const isCompleted = turno.estado === "COMPLETADO";
     const matches = matchesProperty && isCompleted;
 
-    console.log("Debug review:", {
-      turno,
-      targetId,
-      userId,
-      matchesProperty,
-      isCompleted,
-      matches,
-    });
-
     return matches;
   });
-      console.log("Resultado final hasCompletedVisit:", hasCompletedVisit);
+    console.log("Resultado final hasCompletedVisit:", hasCompletedVisit);
     return hasCompletedVisit;
+
   } catch (error) {
     console.error("Error crítico en checkIfUserCanReview:", error);
     return false;
   }
+}
+
+export async function hasUserAlreadyReviewed(userId: string, targetId: string): Promise<boolean> {
+  const existing = await db.review.findFirst({
+    where: { authorId: userId, targetId },
+  });
+  return !!existing;
 }
 
 export async function getPropertiesAvailableToReview(userId: string) {

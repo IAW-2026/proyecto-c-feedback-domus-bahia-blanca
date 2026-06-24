@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import BuyerFeedbackClient from "@/components/clients/BuyerFeedbackClient";
 import SellerFeedbackClient from "@/components/clients/SellerFeedbackClient";
 import { getUserRole, getProperty } from "@/app/actions/reviews";
-import { checkIfUserCanReview } from "@/app/actions/reviews";
+import { checkIfUserCanReview,hasUserAlreadyReviewed } from "@/app/actions/reviews";
 
 interface FeedbackPageProps {
   params: Promise<{ targetId: string }>;
@@ -20,18 +20,21 @@ export default async function FeedbackPage({
   }
 
   const { targetId } = await params;
-  console.log("targetId:", targetId);
 
   const canReview = await checkIfUserCanReview(userId, targetId);
-  console.log("canReview:", canReview);
+  const alreadyReviewed = await hasUserAlreadyReviewed(userId, targetId);
 
   const roles = await getUserRole(userId);
-  console.log("role:", roles);
 
   const propertyResult = await getProperty(targetId);
 
   if (!propertyResult.success || !propertyResult.data) {
     notFound();
+  }
+
+  if (canReview && alreadyReviewed) {
+    // ya reseñó esta propiedad, no puede entrar a dejar otra
+    redirect("/reviews/already-reviewed");
   }
 
   if (canReview) {
