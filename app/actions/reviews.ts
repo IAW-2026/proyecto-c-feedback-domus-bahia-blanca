@@ -63,6 +63,11 @@ export async function getProperty(targetId: string) {
   try {
     const property = await getPropertyById(targetId);
 
+    console.log(
+      "MULTIMEDIA:",
+      JSON.stringify(property?.multimedia, null, 2)
+    );
+
     if (!property) {
       return {
         success: false,
