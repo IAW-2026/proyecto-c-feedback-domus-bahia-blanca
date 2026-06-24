@@ -20,8 +20,14 @@ export default async function FeedbackPage({
   }
 
   const { targetId } = await params;
+  console.log("targetId:", targetId);
+
   const canReview = await checkIfUserCanReview(userId, targetId);
+  console.log("canReview:", canReview);
+
   const roles = await getUserRole(userId);
+  console.log("role:", roles);
+
   const propertyResult = await getProperty(targetId);
 
   if (!propertyResult.success || !propertyResult.data) {
