@@ -3,7 +3,7 @@ import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 
 interface NavbarProps {
   userId: string | null;
-  role?: string;
+  role?: ("buyer" | "seller" | "admin")[];
 }
 
 export default function Navbar({ userId, role }: NavbarProps) {
@@ -41,7 +41,7 @@ export default function Navbar({ userId, role }: NavbarProps) {
             </>
           ) : (
             <>
-              {role === "admin" && (
+              {role?.includes("admin") && (
                 <Link href="/admin">
                   <button className="border border-domus-secondary px-3 md:px-5 py-2 md:py-3 rounded-xl md:rounded-2xl hover:bg-domus-secondary transition cursor-pointer text-sm md:text-base text-domus-text font-medium">
                     Panel Admin
