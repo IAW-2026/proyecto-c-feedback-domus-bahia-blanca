@@ -26,6 +26,9 @@ export default async function FeedbackPage({
 
   const roles = await getUserRole(userId);
 
+  console.log("roles:", roles);
+  console.log("userId:", userId);
+
   const propertyResult = await getProperty(targetId);
 
   if (!propertyResult.success || !propertyResult.data) {
