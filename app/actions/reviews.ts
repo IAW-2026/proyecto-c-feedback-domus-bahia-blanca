@@ -212,11 +212,15 @@ export async function checkIfUserCanReview(userId: string, targetId: string): Pr
     );
 
     if (!response.ok) {
-      console.error("Error al conectar con el módulo del compañero");
+      console.error("Error al conectar con API");
       return false;
     }
 
     const turnos = await response.json();
+    
+    console.log("Turnos recibidos:", JSON.stringify(turnos));
+    console.log("Cantidad de turnos:", Array.isArray(turnos) ? turnos.length : "no es array");
+
 
     if (!Array.isArray(turnos)) {
       console.error("Respuesta inesperada del módulo de turnos");
