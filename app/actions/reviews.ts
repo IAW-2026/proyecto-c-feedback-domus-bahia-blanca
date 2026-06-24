@@ -316,17 +316,11 @@ export async function getUserRole(
     const client = await clerkClient();
     const user = await client.users.getUser(userId);
 
-    const rawRole = user.publicMetadata?.role;
+    const roles = user.publicMetadata.role as string[];
 
-    // soporta tanto un string único como un array ya guardado en Clerk
-    const roles = Array.isArray(rawRole) ? rawRole : [rawRole];
-
-    const validRoles = roles.filter(
-      (r): r is "buyer" | "seller" | "admin" =>
-        r === "seller" || r === "admin" || r === "buyer"
-    );
-
-    return validRoles.length > 0 ? validRoles : ["buyer"];
+    return roles.map((role) =>
+      role === "agente" ? "seller" : role
+    ) as ("buyer" | "seller" | "admin")[];
   } catch {
     return ["buyer"];
   }
