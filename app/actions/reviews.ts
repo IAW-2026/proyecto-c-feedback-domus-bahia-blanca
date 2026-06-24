@@ -302,26 +302,24 @@ export async function getTotalReviewsCount() { //sirve para la homepage, en el c
 
 export async function getUserRole(
   userId: string
-): Promise<"buyer" | "seller" | "admin"> {
+): Promise<("buyer" | "seller" | "admin")[]> {
   try {
     const client = await clerkClient();
     const user = await client.users.getUser(userId);
 
-    const role =
-      user.publicMetadata?.role;
+    const rawRole = user.publicMetadata?.role;
 
-    if (
-      role === "seller" ||
-      role === "admin" ||
-      role === "buyer"
-    ) {
-      return role;
-    }
+    // soporta tanto un string único como un array ya guardado en Clerk
+    const roles = Array.isArray(rawRole) ? rawRole : [rawRole];
 
-    return "buyer";
+    const validRoles = roles.filter(
+      (r): r is "buyer" | "seller" | "admin" =>
+        r === "seller" || r === "admin" || r === "buyer"
+    );
 
+    return validRoles.length > 0 ? validRoles : ["buyer"];
   } catch {
-    return "buyer";
+    return ["buyer"];
   }
 }
 

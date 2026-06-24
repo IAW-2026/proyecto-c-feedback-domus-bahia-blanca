@@ -20,20 +20,24 @@ export default async function FeedbackPage({
   }
 
   const { targetId } = await params;
-  const canReview = await checkIfUserCanReview(userId,targetId);
-
-  if (!canReview) {
-    notFound();
-  }
-
-  const role = await getUserRole(userId);
+  const canReview = await checkIfUserCanReview(userId, targetId);
+  const roles = await getUserRole(userId);
   const propertyResult = await getProperty(targetId);
 
   if (!propertyResult.success || !propertyResult.data) {
     notFound();
   }
 
-  if (role === "seller") {
+  if (canReview) {
+    return (
+      <BuyerFeedbackClient
+        targetId={targetId}
+        property={propertyResult.data}
+      />
+    );
+  }
+
+  if (roles.includes("seller")) {
     return (
       <SellerFeedbackClient
         targetId={targetId}
@@ -42,12 +46,5 @@ export default async function FeedbackPage({
     );
   }
 
-  if (role === "buyer") {
-    return (
-      <BuyerFeedbackClient
-        targetId={targetId}
-        property={propertyResult.data}
-      />
-    );
-  }
+  notFound();
 }
