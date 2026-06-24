@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+
 import { BedDouble, Bath, Ruler, CarFront, Building2, } from "lucide-react";
 import Link from "next/link";
 
@@ -30,13 +30,10 @@ export default function PropertyHero({
      >
       {/* IMAGEN */}
       <div className="relative w-full h-[420px] overflow-hidden">
-        <Image
+        <img
           src={imageUrl}
           alt={title}
-          fill
-          sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover"
-          priority
+          className="w-full h-full object-cover"
         />
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
