@@ -223,14 +223,26 @@ export async function checkIfUserCanReview(userId: string, targetId: string): Pr
       return false;
     }
 
-    const hasCompletedVisit = turnos.some(
-      (turno: any) =>
-        turno.propiedadId === targetId &&
-        turno.compradorId === userId &&
-        turno.estado === "COMPLETADO"
-    );
+  const hasCompletedVisit = turnos.some((turno: any) => {
+  const matchesProperty = turno.propiedadId === targetId;
+  const matchesBuyer = turno.compradorId === userId;
+  const isCompleted = turno.estado === "COMPLETADO";
+  const matches = matchesProperty && matchesBuyer && isCompleted;
 
-    return hasCompletedVisit;
+  console.log("Debug review:", {
+    turno,
+    targetId,
+    userId,
+    matchesProperty,
+    matchesBuyer,
+    isCompleted,
+    matches,
+  });
+
+  return matches;
+});
+console.log("Resultado final hasCompletedVisit:", hasCompletedVisit);
+
   } catch (error) {
     console.error("Error crítico en checkIfUserCanReview:", error);
     return false; 
