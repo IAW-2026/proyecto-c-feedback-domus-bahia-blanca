@@ -20,8 +20,10 @@ export default async function HomePage() {
 
   const totalReviews =
     reviewsCountResult?.success ? reviewsCountResult.total : 0;
-
-  const role = await getUserRole(userId ?? "");
+  
+    const role = userId
+    ? await getUserRole(userId)
+    : [];
 
   return (
     <main className="min-h-screen bg-domus-bg overflow-x-hidden">
@@ -29,7 +31,10 @@ export default async function HomePage() {
 
       <Navbar userId={userId} role={role} />
       
-      <HeroSection totalReviews={totalReviews} />
+      <HeroSection
+        totalReviews={totalReviews}
+        isLoggedIn={!!userId}
+      />
 
       <TopRatedSection
         properties={sortedProperties}

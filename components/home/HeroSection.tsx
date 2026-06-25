@@ -1,5 +1,5 @@
 "use client";
-
+import { SignInButton } from "@clerk/nextjs";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import Link from "next/link";
 import {motion, useScroll, useTransform, useMotionTemplate} from "framer-motion";
@@ -7,6 +7,7 @@ import { ShieldCheck, Star, Users } from "lucide-react";
 
 interface HeroSectionProps {
   totalReviews: number;
+  isLoggedIn: boolean;
 }
 
 const scrollToTopProperties = () => {
@@ -29,6 +30,7 @@ const scrollToTopProperties = () => {
 
 export default function HeroSection({
   totalReviews,
+  isLoggedIn,
 }: HeroSectionProps) {
   const { scrollY } = useScroll();
   const isMobile = useIsMobile();
@@ -87,19 +89,37 @@ export default function HeroSection({
 
             {/* CTA */}
             <div className="mt-6 flex flex-wrap gap-5">
-              <Link
-                href="/reviews/availableReviews"
-                className="bg-domus-primary text-white px-5 py-3 rounded-2xl font-medium hover:bg-domus-primary-mid transition shadow-md cursor-pointer whitespace-nowrap"
-              >
-                Dejar una reseña
-              </Link>
+              {isLoggedIn ? (
+                <>
+                  <Link
+                    href="/reviews/availableReviews"
+                    className="bg-domus-primary text-white px-5 py-3 rounded-2xl font-medium hover:bg-domus-primary-mid transition shadow-md"
+                  >
+                    Dejar una reseña
+                  </Link>
 
-              <Link
-                href="/globalReviews"
-                className="border border-domus-primary bg-domus-card px-6 py-3 rounded-2xl font-semibold text-domus-text hover:bg-domus-secondary/40 transition"
-              >
-                Explorar reseñas
-              </Link>
+                  <Link
+                    href="/globalReviews"
+                    className="border border-domus-primary bg-domus-card px-6 py-3 rounded-2xl font-semibold text-domus-text hover:bg-domus-secondary/40 transition"
+                  >
+                    Explorar reseñas
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <SignInButton mode="modal" forceRedirectUrl="/">
+                    <button className="bg-domus-primary text-white px-5 py-3 rounded-2xl font-medium hover:bg-domus-primary-mid transition shadow-md cursor-pointer">
+                      Dejar una reseña
+                    </button>
+                  </SignInButton>
+
+                  <SignInButton mode="modal" forceRedirectUrl="/">
+                    <button className="border border-domus-primary bg-domus-card px-6 py-3 rounded-2xl font-semibold text-domus-text hover:bg-domus-secondary/40 transition cursor-pointer">
+                      Explorar reseñas
+                    </button>
+                  </SignInButton>
+                </>
+              )}
 
               <button
                 onClick={scrollToTopProperties}
