@@ -63,10 +63,7 @@ export async function getProperty(targetId: string) {
   try {
     const property = await getPropertyById(targetId);
 
-    console.log(
-      "MULTIMEDIA:",
-      JSON.stringify(property?.multimedia, null, 2)
-    );
+    console.log("PROPERTY COMPLETA:", JSON.stringify(property, null, 2));
 
     if (!property) {
       return {
@@ -89,13 +86,12 @@ export async function getProperty(targetId: string) {
           bedrooms: property.bedrooms ?? 0,
           bathrooms: property.bathrooms ?? 0,
           meters: property.totalSqMeters ?? 0,
-          garage: 0,
+          garage: property?.features?.garage ? 1 : 0,
         },
       },
     };
   } catch (error) {
     console.error("Error obteniendo propiedad:", error);
-
     return {
       success: false,
       error: "No se pudo obtener la propiedad",
@@ -122,7 +118,7 @@ export async function getTopRatedProperties(limit?: number) {
     const data = Object.entries(grouped)
       .map(([targetId, stats]: any) => {
         const prop = properties.find((p: any) => p.id === targetId);
-        const imageUrl = prop?.multimedia?.find((m: any) => m.fileType === "IMAGE")?.fileUrl ?? "/prueba-1.webp";
+        const imageUrl = prop?.multimedia?.find((m: any) => m.fileType === "IMAGE")?.fileUrl ?? null;
         return {
           id: targetId,
           avgRating: stats.total / stats.count,
@@ -133,7 +129,7 @@ export async function getTopRatedProperties(limit?: number) {
             bedrooms: prop?.bedrooms ?? 0,
             bathrooms: prop?.bathrooms ?? 0,
             meters: prop?.totalSqMeters ?? 0,
-            garage: 0,
+            garage: prop?.features?.garage ? 1 : 0,
           },
         };
       })
@@ -190,7 +186,7 @@ export async function getAllRatedProperties() {
           bedrooms: prop?.bedrooms ?? 0,
           bathrooms: prop?.bathrooms ?? 0,
           meters: prop?.totalSqMeters ?? 0,
-          garage: 0,
+          garage: prop?.features?.garage ? 1 : 0,
         },
       };
     });
@@ -253,17 +249,35 @@ export async function hasUserAlreadyReviewed(userId: string, targetId: string): 
 
 export async function getPropertiesAvailableToReview(userId: string) {
   try {
-    const [allProperties, existingReviews] = await Promise.all([
+    const [allProperties, existingReviews, turnosResponse] = await Promise.all([
       getAllPublishedProperties(),
       db.review.findMany({
         where: { authorId: userId },
         select: { targetId: true },
       }),
+      fetch(
+        `https://proyecto-c-shipping-domus-bahia.vercel.app/api/turnos/comprador/${userId}?estado=COMPLETADO`,
+        { cache: "no-store" }
+      ),
     ]);
 
     const reviewedIds = new Set(existingReviews.map((r) => r.targetId));
 
-    const available = allProperties.filter((p: any) => !reviewedIds.has(p.id));
+    let completedPropertyIds = new Set<string>();
+    if (turnosResponse.ok) {
+      const turnos = await turnosResponse.json();
+      if (Array.isArray(turnos)) {
+        completedPropertyIds = new Set(
+          turnos
+            .filter((t: any) => t.estado === "COMPLETADO")
+            .map((t: any) => t.propiedadId)
+        );
+      }
+    }
+
+    const available = allProperties.filter(
+      (p: any) => !reviewedIds.has(p.id) && completedPropertyIds.has(p.id)
+    );
 
     const properties = await Promise.all(
       available.map(async (prop: any) => {
@@ -285,7 +299,7 @@ export async function getPropertiesAvailableToReview(userId: string) {
             bedrooms: prop.bedrooms ?? 0,
             bathrooms: prop.bathrooms ?? 0,
             meters: prop.totalSqMeters ?? 0,
-            garage: 0,
+            garage: prop?.features?.garage ? 1 : 0,
           },
         };
       })

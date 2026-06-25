@@ -2,6 +2,10 @@ const SELLER_API_URL = "https://proyecto-c-seller-domus-bahia-blanc.vercel.app";
 const SELLER_API_KEY = process.env.SELLER_API_KEY!;
 
 export async function getPropertiesByIds(ids: string[]) {
+  console.log("SELLER_API_URL:", SELLER_API_URL);
+  console.log("SELLER_API_KEY presente:", !!SELLER_API_KEY);
+  console.log("ids recibidos:", ids);
+
   const res = await fetch(
     `${SELLER_API_URL}/api/properties/batch?ids=${ids.join(",")}`,
     {
@@ -9,6 +13,8 @@ export async function getPropertiesByIds(ids: string[]) {
       next: { revalidate: 60 },
     }
   );
+
+  console.log("status:", res.status);
 
   if (!res.ok) return null;
   const json = await res.json();
