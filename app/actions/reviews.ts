@@ -118,21 +118,24 @@ export async function getTopRatedProperties(limit?: number) {
     const data = Object.entries(grouped)
       .map(([targetId, stats]: any) => {
         const prop = properties.find((p: any) => p.id === targetId);
-        const imageUrl = prop?.multimedia?.find((m: any) => m.fileType === "IMAGE")?.fileUrl ?? null;
+        if (!prop) return null;
+
+        const imageUrl = prop.multimedia?.find((m: any) => m.fileType === "IMAGE")?.fileUrl ?? null;
         return {
           id: targetId,
           avgRating: stats.total / stats.count,
           reviewCount: stats.count,
-          location: prop?.title ?? prop?.location ?? `Propiedad ${targetId}`,
+          location: prop.title ?? prop.location ?? `Propiedad ${targetId}`,
           imageUrl,
           specs: {
-            bedrooms: prop?.bedrooms ?? 0,
-            bathrooms: prop?.bathrooms ?? 0,
-            meters: prop?.totalSqMeters ?? 0,
+            bedrooms: prop.bedrooms ?? 0,
+            bathrooms: prop.bathrooms ?? 0,
+            meters: prop.totalSqMeters ?? 0,
             garage: prop?.features?.garage ? 1 : 0,
           },
         };
       })
+      .filter((item) => item !== null)
       .sort((a, b) => b.avgRating - a.avgRating)
       .slice(0, limit);
 
@@ -173,23 +176,27 @@ export async function getAllRatedProperties() {
     const targetIds = topRated.map((item) => item.targetId);
     const properties = await getPropertiesByIds(targetIds);
 
-    const data = topRated.map((item) => {
-      const prop = properties.find((p: any) => p.id === item.targetId);
-      const imageUrl = prop?.multimedia?.find((m: any) => m.fileType === "IMAGE")?.fileUrl ?? "/prueba-1.webp";
-      return {
-        id: item.targetId,
-        avgRating: item._avg.rating || 0,
-        reviewCount: item._count._all,
-        location: prop?.title ?? prop?.location ?? `Propiedad ${item.targetId}`,
-        imageUrl,
-        specs: {
-          bedrooms: prop?.bedrooms ?? 0,
-          bathrooms: prop?.bathrooms ?? 0,
-          meters: prop?.totalSqMeters ?? 0,
-          garage: prop?.features?.garage ? 1 : 0,
-        },
-      };
-    });
+    const data = topRated
+      .map((item) => {
+        const prop = properties.find((p: any) => p.id === item.targetId);
+        if (!prop) return null;
+
+        const imageUrl = prop.multimedia?.find((m: any) => m.fileType === "IMAGE")?.fileUrl ?? "/prueba-1.webp";
+        return {
+          id: item.targetId,
+          avgRating: item._avg.rating || 0,
+          reviewCount: item._count._all,
+          location: prop.title ?? prop.location ?? `Propiedad ${item.targetId}`,
+          imageUrl,
+          specs: {
+            bedrooms: prop.bedrooms ?? 0,
+            bathrooms: prop.bathrooms ?? 0,
+            meters: prop.totalSqMeters ?? 0,
+            garage: prop?.features?.garage ? 1 : 0,
+          },
+        };
+      })
+      .filter((item) => item !== null);
 
     return { success: true, data };
   } catch (error) {

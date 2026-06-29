@@ -2,23 +2,25 @@ const SELLER_API_URL = "https://proyecto-c-seller-domus-bahia-blanc.vercel.app";
 const SELLER_API_KEY = process.env.SELLER_API_KEY!;
 
 export async function getPropertiesByIds(ids: string[]) {
-  console.log("SELLER_API_URL:", SELLER_API_URL);
-  console.log("SELLER_API_KEY presente:", !!SELLER_API_KEY);
-  console.log("ids recibidos:", ids);
-
-  const res = await fetch(
-    `${SELLER_API_URL}/api/properties/batch?ids=${ids.join(",")}`,
-    {
-      headers: { "X-API-Key": SELLER_API_KEY },
-      next: { revalidate: 60 },
+  if (ids.length === 0) return [];
+  try {
+    const res = await fetch(
+      `${SELLER_API_URL}/api/properties/batch?ids=${ids.join(",")}`,
+      {
+        headers: { "X-API-Key": SELLER_API_KEY },
+        cache: "no-store",
+      }
+    );
+    if (!res.ok) {
+      console.error("Error al obtener propiedades por ids:", res.status);
+      return [];
     }
-  );
-
-  console.log("status:", res.status);
-
-  if (!res.ok) return null;
-  const json = await res.json();
-  return json.data ?? [];
+    const json = await res.json();
+    return json.data ?? [];
+  } catch (error) {
+    console.error("Error de red en getPropertiesByIds:", error);
+    return [];
+  }
 }
 
 export async function getPropertyById(id: string) {
