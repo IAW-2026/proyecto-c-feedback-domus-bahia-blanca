@@ -7,7 +7,7 @@ import ReviewList from "@/components/feedback/ReviewList";
 import { useEffect, useMemo, useState } from "react";
 import { getReviewsByTarget } from "@/app/actions/reviews";
 import { ShieldCheck, Star } from "lucide-react";
-import Link from "next/link";
+import { BackButton } from "@/components/home/BackButton";
 
 interface SellerFeedbackClientProps {
   targetId: string;
@@ -79,15 +79,9 @@ export default function SellerFeedbackClient({
       <div className="max-w-7xl mx-auto">
 
         <div className="mb-2">
-        <Link
-          href="/globalReviews"
-          className="group inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-domus-terracota text-white border border-domus-terracota shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300 font-semibold"
-        >
-          <span className="group-hover:-translate-x-1 transition-transform duration-300">
-            ←
-          </span>
-          Volver
-        </Link>
+          <div className="mb-2">
+            <BackButton />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_1.35fr] gap-8 items-start">

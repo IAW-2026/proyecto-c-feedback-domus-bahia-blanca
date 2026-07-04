@@ -7,22 +7,25 @@ interface NavbarProps {
 }
 
 export default function Navbar({ userId, role }: NavbarProps) {
+  const logoHref = role?.includes("seller")
+    ? "https://proyecto-c-seller-domus-bahia-blanc.vercel.app/dashboard"
+    : "https://domus-buyer-app.vercel.app/";
+
   return (
     <nav className="border-b border-domus-secondary bg-domus-card/80 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
         {/* LOGO */}
-        <div>
+        <a href={logoHref} className="cursor-pointer">
           <h1 className="text-3xl md:text-4xl font-bold text-domus-primary tracking-wide">
             DOMUS
           </h1>
-
           <p className="text-[10px] md:text-xs tracking-[0.25em] text-domus-text-soft">
             BAHÍA BLANCA
           </p>
-        </div>
+        </a>
 
-       {/* ACTIONS */}
+        {/* ACTIONS */}
         <div className="flex items-center gap-2 md:gap-4">
 
           {!userId ? (

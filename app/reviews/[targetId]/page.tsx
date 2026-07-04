@@ -2,8 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { notFound, redirect } from "next/navigation";
 import BuyerFeedbackClient from "@/components/clients/BuyerFeedbackClient";
 import SellerFeedbackClient from "@/components/clients/SellerFeedbackClient";
-import { getUserRole, getProperty } from "@/app/actions/reviews";
-import { checkIfUserCanReview,hasUserAlreadyReviewed } from "@/app/actions/reviews";
+import { getUserRole, getProperty, checkIfUserCanReview, hasUserAlreadyReviewed } from "@/app/actions/reviews";
 
 interface FeedbackPageProps {
   params: Promise<{ targetId: string }>;
@@ -21,37 +20,38 @@ export default async function FeedbackPage({
 
   const { targetId } = await params;
 
-  const canReview = await checkIfUserCanReview(userId, targetId);
-  const alreadyReviewed = await hasUserAlreadyReviewed(userId, targetId);
-
-  const roles = await getUserRole(userId);
-
-  console.log("roles:", roles);
-  console.log("userId:", userId);
-
-  const propertyResult = await getProperty(targetId);
+  const [roles, propertyResult] = await Promise.all([
+    getUserRole(userId),
+    getProperty(targetId),
+  ]);
 
   if (!propertyResult.success || !propertyResult.data) {
     notFound();
   }
 
-  if (canReview && alreadyReviewed) {
-    // ya reseñó esta propiedad, no puede entrar a dejar otra
-    redirect("/reviews/already-reviewed");
-  }
-
-  if (canReview) {
+  // seller tiene prioridad absoluta
+  if (roles.includes("seller")) {
     return (
-      <BuyerFeedbackClient
+      <SellerFeedbackClient
         targetId={targetId}
         property={propertyResult.data}
       />
     );
   }
 
-  if (roles.includes("seller")) {
+  // si no es seller, chequeamos si puede reseñar como buyer
+  const [canReview, alreadyReviewed] = await Promise.all([
+    checkIfUserCanReview(userId, targetId),
+    hasUserAlreadyReviewed(userId, targetId),
+  ]);
+
+  if (canReview && alreadyReviewed) {
+    redirect("/reviews/already-reviewed");
+  }
+
+  if (canReview) {
     return (
-      <SellerFeedbackClient
+      <BuyerFeedbackClient
         targetId={targetId}
         property={propertyResult.data}
       />

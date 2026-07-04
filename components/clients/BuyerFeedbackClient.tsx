@@ -11,7 +11,7 @@ import { Send } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { BackButton } from "@/components/home/BackButton";
 
 interface FeedbackClientProps {
   targetId: string;
@@ -149,15 +149,9 @@ export default function FeedbackClient({targetId,property,}: FeedbackClientProps
       <div className="max-w-7xl mx-auto flex flex-col gap-8">
 
         <div className="mb-2">
-          <Link
-            href="/globalReviews"
-            className="group inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-domus-terracota text-white border border-domus-terracota shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300 font-semibold"
-          >
-            <span className="group-hover:-translate-x-1 transition-transform duration-300">
-              ←
-            </span>
-            Volver
-          </Link>
+          <div className="mb-2">
+            <BackButton />
+          </div>
         </div>
 
         {/* HERO + FORM */}
