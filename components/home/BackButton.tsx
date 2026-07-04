@@ -11,7 +11,9 @@ const HISTORY_START_KEY = 'domus_history_start'
 function getTrustedOrigins() {
   return [
     process.env.NEXT_PUBLIC_BUYER_APP_BASE_URL,
-    'https://domus-buyer-app.vercel.app'
+    'https://domus-buyer-app.vercel.app',
+    process.env.NEXT_PUBLIC_SELLER_APP_BASE_URL,
+    'https://proyecto-c-seller-domus-bahia-blanc.vercel.app',
   ].filter(Boolean) as string[]
 }
 
