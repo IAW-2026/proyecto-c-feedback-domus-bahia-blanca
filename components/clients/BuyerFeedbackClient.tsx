@@ -125,15 +125,6 @@ export default function FeedbackClient({targetId,property,}: FeedbackClientProps
         content: content,
       });
 
-      if (result.success) {
-        toast.success("¡Reseña publicada con éxito!");
-        setTimeout(() => {
-          router.push("/");
-          router.refresh();
-        }, 1500); // espera 1.5s para que el usuario vea el toast antes de redirigir
-      } else {
-        toast.error("Error al guardar: " + result.error);
-      }
     } catch (error) {
       toast.error("Error crítico de conexión.");
       console.error(error);

@@ -1,6 +1,5 @@
 "use client";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { motion } from "framer-motion";
 import { Toaster, toast } from "sonner";
 import PropertyHero from "@/components/feedback/PropertyHero";
 import ReviewList from "@/components/feedback/ReviewList";

@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { CheckCircle2, ArrowLeft } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 export default function AlreadyReviewedPage() {
   return (
@@ -18,13 +18,14 @@ export default function AlreadyReviewedPage() {
           Cada visita o compra solo permite una reseña por propiedad. Gracias por compartir tu experiencia con la comunidad.
         </p>
 
-        <Link
-          href="/"
-          className="mt-8 inline-flex items-center gap-2 bg-domus-primary text-white px-6 py-3 rounded-2xl hover:bg-domus-primary-mid transition shadow-md font-semibold cursor-pointer"
+        <button
+          onClick={() => window.history.go(-2)} //Esto es lo único que no verifica si se mantiene en la app el retroceder 2 páginas :) firma tomás.
+          className="mt-8 group inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-domus-terracota text-white border border-domus-terracota shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300 font-semibold"
         >
-          <ArrowLeft size={18} />
-          Volver al inicio
-        </Link>
+          <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform duration-300" />
+          Volver
+        </button>
+
       </div>
     </main>
   );
