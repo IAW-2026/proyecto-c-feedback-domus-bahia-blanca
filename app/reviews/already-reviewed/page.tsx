@@ -1,5 +1,6 @@
-import { CheckCircle2 } from "lucide-react";
-import { ArrowLeft } from "lucide-react";
+"use client";
+
+import { CheckCircle2 , ArrowLeft } from "lucide-react";
 
 export default function AlreadyReviewedPage() {
   return (
