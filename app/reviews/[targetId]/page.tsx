@@ -39,21 +39,18 @@ export default async function FeedbackPage({
     );
   }
 
-  // si no es seller, chequeamos si puede reseñar como buyer
+  // Si no es seller, chequeamos si puede reseñar como buyer
   const [canReview, alreadyReviewed] = await Promise.all([
     checkIfUserCanReview(userId, targetId),
     hasUserAlreadyReviewed(userId, targetId),
   ]);
-
-  if (canReview && alreadyReviewed) {
-    redirect("/reviews/already-reviewed");
-  }
 
   if (canReview) {
     return (
       <BuyerFeedbackClient
         targetId={targetId}
         property={propertyResult.data}
+        initialAlreadyReviewed={alreadyReviewed} 
       />
     );
   }
